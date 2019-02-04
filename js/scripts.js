@@ -29,3 +29,26 @@ Card.prototype.makeGraph = function(){
     this.node.edges.push(cards[this.x][y].node);
   }
 };
+
+var cards = new Array(5);
+for (var k = 0; k < 5; k++) {
+  cards[k] = new Array(5);
+};
+
+$(document).ready(function(){
+
+  $("#main").click(function(){
+
+    var id = 0;
+    for (var i = 0; i < cards.length; i++) {
+      for (var j = 0; j < cards[i].length; j++) {
+        var card = new Card(id, i, j);
+        id += 1;
+        cards[i][j] = card;
+      };
+    };
+
+console.log(cards);
+
+  });
+});
