@@ -1,0 +1,17 @@
+Board size 5x5
+ ---     ---     ---
+| C | e | T | e | C |
+ ---     ---     ---
+  e   e   e   e   e
+ ---     ---     ---
+| T | e | I | e | T |
+ ---     ---     ---
+  e   e   e   e   e
+ ---     ---     ---
+| C | e | T | e | C |
+ ---    ---    ---
+
+C - corner
+T - T-shape
+I - straight
+e - empty space
