@@ -14,7 +14,7 @@ Game.prototype.initialize = function(){
   this.board.initializeCards();
   // initialize Players positions, treasures positions
   this.userInterface = new UserInterface();
-  this.userInterface.onCardClick = this.clickCard;
+  this.userInterface.onCardClick= this.clickCard;
   this.userInterface.onArrowClick = this.clickArrow;
   //this.userInterface.assignRandomImages(this.boardSize);
   this.userInterface.showBoard(this.boardSize, this.board.cards);
@@ -277,15 +277,19 @@ Board.prototype.initializeCards = function(){
       cardId += 1;
 // need to REPLACE:
 // should be specific number of each cards!
-      this.cards[i][j].type = Math.floor(Math.random() * 3);
-      this.cards[i][j].rotationAngle = Math.floor(Math.random() * 4) * 90;
-
-      this.cards[i][j].setWalls();
+      this.cards[i][j].setInitialParameters();
     }
   }
   this.freeCard = new Card(cardId, -1, -1);
+  this.freeCard.setInitialParameters();
   console.log(this);
   this.freeCard.node = new Node(cardId);
+}
+
+Card.prototype.setInitialParameters = function(){
+  this.type = Math.floor(Math.random() * 3);
+  this.rotationAngle = Math.floor(Math.random() * 4) * 90;
+  this.setWalls();
 }
 
 var boardSize = 5;
@@ -301,7 +305,7 @@ UserInterface.prototype.attachListeners = function(){
       var x = parseInt(this.id.substring(4, underlineIndex));
       var y = parseInt(this.id.substring(underlineIndex + 1, this.id.length));
 
-      userInt.onCardClick(x, y);
+      userInt.onCardClick();
 
     } else if (this.id.indexOf("arrow") !== -1){
       var underlineIndex = this.id.indexOf("_");
