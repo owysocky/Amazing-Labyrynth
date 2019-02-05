@@ -31,11 +31,8 @@ Game.prototype.clickCard = function(x, y){
 }
 
 Game.prototype.clickArrow = function(x, y){
-  alert(0);
-  console.log(game.board);
-
   game.board.pushingCard(x, null, "ltr", game.board.freeCard);
-  console.log(game);
+  game.userInterface.showBoard(game.boardSize, game.board.cards);
 }
 
 Game.prototype.addPlayer = function(player){
@@ -177,8 +174,21 @@ function Card(id, x, y){
   this.bottomWall = false
 }
 
-Card.prototype.rotate = function(){
-  // rotation
+Card.prototype.rotate = function(direction){
+  if (direction === "left"){
+    var rightWallValue = this.rightWall; //Store the valule of the right wall before shifting things
+    this.rightWall = this.bottomWall;
+    this.bottomWall = this.leftWall;
+    this.leftWall = this.topWall;
+    this.topWall = rightWallValue;
+  }
+  else{ //Rotating to the right
+    var rightWallValue = this.rightWall;
+    this.rightWall = this.topWall;
+    this.topWall = this.leftWall;
+    this.leftWall = this.bottomWall;
+    this.bottomWall = rightWallValue;
+  }
 }
 
 Card.prototype.setWalls = function(){
