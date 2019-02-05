@@ -31,12 +31,11 @@ Game.prototype.clickCard = function(x, y){
 }
 
 Game.prototype.clickArrow = function(x, y){
-  if (x < 0) { // push from top
-    for (var i = 0; i < boardSize; i++) {
-      boardSize
-    }
-  }
-  alert(1);
+  alert(0);
+  console.log(game.board);
+
+  game.board.pushingCard(x, null, "ltr", game.board.freeCard);
+  console.log(game);
 }
 
 Game.prototype.addPlayer = function(player){
@@ -61,11 +60,62 @@ function Board(size) {
   this.size = size
 }
 
-Board.prototype.pushCard = function(x, y){
-  // pushes free card to (x, y) position in cards Array
-  // the old card becomes free
-  console.log(1);
-}
+Board.prototype.pushingCard = function(x, y, direction, pushCard){
+  var spareCard; //The card that will get pushed out
+  if(x){ //Inserting the card into a row
+    if(direction === "ltr"){ //Direction is left to right
+      spareCard = this.cards[x][this.cards.length - 1];
+      spareCard.x = -1; //Resetting cooirdinates of spare card
+      spareCard.y = -1;
+      for(var i = this.cards.length - 1; i > 0; i--){
+        this.cards[x][i] = this.cards[x][i-1];
+        this.cards[x][i].y++;//Updating y cooirdinate of shifted element
+      }
+      this.cards[x][0] = pushCard; //Card that is being pushed in
+      this.cards[x][0].x = x;
+      this.cards[x][0].y = 0;
+      return spareCard;
+    }else{ //Direction is right to left
+      spareCard = this.cards[x][0];
+      spareCard.x = -1; //Resetting cooirdinates of spare card
+      spareCard.y = -1;
+      for(var i = 0; i < this.cards.length - 1; i++){
+        this.cards[x][i] = this.cards[x][i+1];
+        this.cards[x][i].y--;//Updating y cooirdinate of shifted element
+      }
+      this.cards[x][this.cards.length - 1] = pushCard; //Card that is being pushed in
+      this.cards[x][this.cards.length - 1].x = x;
+      this.cards[x][this.cards.length - 1].y = this.cards.length - 1;
+      return spareCard;
+    }
+  }else{ //Inserting the card into a column
+    if(direction === "ttb"){ //Direction is top to bottom
+      spareCard = this.cards[this.cards.length - 1][y];
+      spareCard.x = -1;
+      spareCard.y = -1;
+      for(var i = this.cards.length - 1; i > 0; i--){
+          this.cards[i][y] = this.cards[i-1][y];
+          this.cards[i][y].x++;
+      }
+      this.cards[0][y] = pushCard;
+      this.cards[0][y].x = 0;
+      this.cards[0][y].y = y;
+      return spareCard;
+    }else{ //Direction is bottom to top
+      spareCard = this.cards[0][y];
+      spareCard.x = -1;
+      spareCard.y = -1;
+      for(var i = 0; i < this.cards.length - 1; i++){
+          this.cards[i][y] = this.cards[i+1][y];
+          this.cards[i][y].x--;
+      }
+      this.cards[this.cards.length-1][y] = pushCard;
+      this.cards[this.cards.length-1][y].x = this.cards.length - 1;
+      this.cards[this.cards.length-1][y].y = y;
+      return spareCard;
+    }
+  }
+};
 
 // finds Player or Treasure by id
 Board.prototype.findItem = function(id){
@@ -342,6 +392,7 @@ console.log(game);
     // };
 
 console.log(cards);
+
 
   });
 });
