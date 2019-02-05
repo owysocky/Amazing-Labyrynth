@@ -11,7 +11,7 @@ Board size 5x5
 | C | e | T | e | C |
  ---    ---    ---
 
-C - corner
-T - T-shape
-I - straight
+C - corner (12 cards total)
+T - T-shape (11 cards total)
+I - straight (3 cards total)
 e - empty space
