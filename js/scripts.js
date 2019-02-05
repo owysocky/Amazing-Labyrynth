@@ -31,7 +31,7 @@ Game.prototype.clickCard = function(x, y){
 }
 
 Game.prototype.clickArrow = function(x, y){
-  game.board.pushingCard(x, null, "ltr", game.board.freeCard);
+  game.board.pushingCard(x, y, game.board.freeCard);
   game.userInterface.showBoard(game.boardSize, game.board.cards);
 }
 
@@ -57,10 +57,10 @@ function Board(size) {
   this.size = size
 }
 
-Board.prototype.pushingCard = function(x, y, direction, pushCard){
+Board.prototype.pushingCard = function(x, y, pushCard){
   var spareCard; //The card that will get pushed out
-  if(x){ //Inserting the card into a row
-    if(direction === "ltr"){ //Direction is left to right
+  if(y === 0 || y === this.cards.length - 1){ //Inserting the card into a row
+    if(y === 0){ //Direction is left to right
       spareCard = this.cards[x][this.cards.length - 1];
       spareCard.x = -1; //Resetting cooirdinates of spare card
       spareCard.y = -1;
@@ -86,7 +86,7 @@ Board.prototype.pushingCard = function(x, y, direction, pushCard){
       return spareCard;
     }
   }else{ //Inserting the card into a column
-    if(direction === "ttb"){ //Direction is top to bottom
+    if(x === 0){ //Direction is top to bottom
       spareCard = this.cards[this.cards.length - 1][y];
       spareCard.x = -1;
       spareCard.y = -1;
@@ -348,7 +348,7 @@ Board.prototype.initializeCards = function(){
   this.freeCard.node = new Node(cardId);
 }
 
-var boardSize = 5;
+var boardSize = 7;
 var game = new Game(boardSize);
 
 //function attachListeners(){
