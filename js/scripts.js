@@ -71,7 +71,7 @@ Board.prototype.pushingCard = function(x, y, pushCard){
       this.cards[x][0] = pushCard; //Card that is being pushed in
       this.cards[x][0].x = x;
       this.cards[x][0].y = 0;
-      return spareCard;
+      this.freeCard = spareCard;
     }else{ //Direction is right to left
       spareCard = this.cards[x][0];
       spareCard.x = -1; //Resetting cooirdinates of spare card
@@ -83,7 +83,7 @@ Board.prototype.pushingCard = function(x, y, pushCard){
       this.cards[x][this.cards.length - 1] = pushCard; //Card that is being pushed in
       this.cards[x][this.cards.length - 1].x = x;
       this.cards[x][this.cards.length - 1].y = this.cards.length - 1;
-      return spareCard;
+      this.freeCard = spareCard;
     }
   }else{ //Inserting the card into a column
     if(x === 0){ //Direction is top to bottom
@@ -97,7 +97,7 @@ Board.prototype.pushingCard = function(x, y, pushCard){
       this.cards[0][y] = pushCard;
       this.cards[0][y].x = 0;
       this.cards[0][y].y = y;
-      return spareCard;
+      this.freeCard = spareCard;
     }else{ //Direction is bottom to top
       spareCard = this.cards[0][y];
       spareCard.x = -1;
@@ -109,7 +109,7 @@ Board.prototype.pushingCard = function(x, y, pushCard){
       this.cards[this.cards.length-1][y] = pushCard;
       this.cards[this.cards.length-1][y].x = this.cards.length - 1;
       this.cards[this.cards.length-1][y].y = y;
-      return spareCard;
+      this.freeCard = spareCard;
     }
   }
 };
@@ -174,21 +174,17 @@ function Card(id, x, y){
   this.bottomWall = false
 }
 
-Card.prototype.rotate = function(direction){
-  if (direction === "left"){
-    var rightWallValue = this.rightWall; //Store the valule of the right wall before shifting things
-    this.rightWall = this.bottomWall;
-    this.bottomWall = this.leftWall;
-    this.leftWall = this.topWall;
-    this.topWall = rightWallValue;
-  }
-  else{ //Rotating to the right
+Card.prototype.rotate = function(){
+    //Rotating to the right
     var rightWallValue = this.rightWall;
     this.rightWall = this.topWall;
     this.topWall = this.leftWall;
     this.leftWall = this.bottomWall;
     this.bottomWall = rightWallValue;
-  }
+    this.rotationAngle += 90;
+    if(this.rotationAngle > 270){
+      this.rotationAngle = 0;
+    }
 }
 
 Card.prototype.setWalls = function(){
@@ -322,6 +318,8 @@ UserInterface.prototype.showBoard = function(size, cards){
 
   };
   tag.html(htmlText);
+  var cardToUse = "<img class='rotate" + game.board.freeCard.rotationAngle + "' src='img/" + this.images[game.board.freeCard.type] + "' id='freeCard'>";
+  $("#cardToUse").html(cardToUse);
 }
 
 Board.prototype.initializeCards = function(){
@@ -377,6 +375,10 @@ UserInterface.prototype.attachListeners = function(){
     }
 
 
+  });
+  $("#cardToUse").on("click", "#freeCard", function(){
+    game.board.freeCard.rotate();
+    game.userInterface.showBoard(game.boardSize, game.board.cards);
   });
 }
 
