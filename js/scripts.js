@@ -15,7 +15,7 @@ Game.prototype.initialize = function(){
   // initialize Players positions, treasures positions
   this.userInterface = new UserInterface();
   //this.userInterface.onCardClick = this.clickCard;
-  //this.userInterface.onArrowClick = this.clickArrow;
+  this.userInterface.onArrowClick = this.clickArrow;
   //this.userInterface.assignRandomImages(this.boardSize);
   this.userInterface.showBoard(this.boardSize, this.board.cards);
   this.userInterface.attachListeners();
