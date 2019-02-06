@@ -34,6 +34,8 @@ UserInterface.prototype.onCardClick = function(callback){
 Game.prototype.clickCard = function(x, y){
   var accessibleCards = this.board.getAccessibleCards(x, y);
   console.log(accessibleCards);
+  console.log(this.userInterface);
+  this.userInterface.HighlightCards(accessibleCards, true);
 }
 
 Game.prototype.clickArrow = function(x, y){
@@ -120,13 +122,27 @@ Board.prototype.pushingCard = function(x, y, pushCard){
   }
 };
 
+// finds Card by id
+Board.prototype.findCard = function(id){
+  for (var i = 0; i < this.cards.length; i++) {
+    for (var j = 0; j < this.cards[i].length; j++) {
+      if (this.cards[i][j]){
+        if (this.cards[i][j].id === id) {
+          return this.cards[i][j];
+        }
+      }
+    }
+  }
+  return false;
+}
+
 // finds Player or Treasure by id
 Board.prototype.findItem = function(id){
   for (var i = 0; i < this.cards.length; i++) {
     for (var j = 0; j < this.cards[i].length; j++) {
       if (this.cards[i][j]){
-        if (this.cards[i][j].id === id) {
-          return cards[i][j];
+        if (this.cards[i][j].items.indexOf(id) !== -1) {
+          return this.cards[i][j];
         }
       }
     }
@@ -166,7 +182,7 @@ Board.prototype.getAccessibleCards = function(x, y){
   var accessibleCards = [];
   for (var i = 0; i < this.nodes.length; i++) {
     if (this.nodes[i].visited === true) {
-      accessibleCards.push(this.nodes[i].id);
+      accessibleCards.push(this.findCard(this.nodes[i].id));
     }
   };
   return accessibleCards;
@@ -262,6 +278,18 @@ Board.prototype.makeEdges = function(card){
 
 function UserInterface(){
   this.images = ["straight.png", "corner.png", "t-shape.png"]
+}
+
+UserInterface.prototype.HighlightCards = function(accessibleCards, highlight){
+  if (highlight) {
+    for (var i = 0; i < accessibleCards.length; i++) {
+      $("#card" + accessibleCards[i].x.toString() + "_" + accessibleCards[i].y.toString()).children().addClass("highlight");
+    };
+  } else {
+    for (var i = 0; i < accessibleCards.length; i++) {
+      $("#card" + accessibleCards[i].x.toString() + "_" + accessibleCards[i].y.toString()).childern().deleteClass("highlight");
+    };
+  }
 }
 
 UserInterface.prototype.showBoard = function(size, cards){

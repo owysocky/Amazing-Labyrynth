@@ -1,3 +1,7 @@
+img.highlight{
+  border: 5px solid #ffa64d; //#E0624C;
+}
+
 img{
   width: 100px;
   border: 2px solid #A45F24; //#664B2F; //#513324; //#D57719;//#E0624C;
@@ -11,6 +15,7 @@ th {
 body {
   background-color: #F0E5CF;
 }
+
 
 .arrow {
   width: 50px;
