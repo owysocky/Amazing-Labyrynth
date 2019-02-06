@@ -43,6 +43,14 @@ th {
     transform: rotate(270deg);
 }
 
+#cardToUse{
+  margin-left: 250px;
+}
+
+#cardToUseText{
+  margin-left: 225px;
+}
+
 /*
 .over {
     width: 30px;
