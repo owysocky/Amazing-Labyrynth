@@ -334,11 +334,11 @@ function UserInterface(){
 UserInterface.prototype.HighlightCards = function(accessibleCards, highlight){
   if (highlight) {
     for (var i = 0; i < accessibleCards.length; i++) {
-      $("#card" + accessibleCards[i].x.toString() + "_" + accessibleCards[i].y.toString()).children().addClass("highlight");
+      $("#card" + accessibleCards[i].x.toString() + "_" + accessibleCards[i].y.toString()).children().first().addClass("highlight");
     };
   } else {
     for (var i = 0; i < accessibleCards.length; i++) {
-      $("#card" + accessibleCards[i].x.toString() + "_" + accessibleCards[i].y.toString()).childern().deleteClass("highlight");
+      $("#card" + accessibleCards[i].x.toString() + "_" + accessibleCards[i].y.toString()).childern().first().deleteClass("highlight");
     };
   }
 }
@@ -396,10 +396,16 @@ UserInterface.prototype.showBoard = function(size, cards){
       if(cards[i][j].treasure){
         $("th#card" + i + "_" + j).append("<img src='img/" +  cards[i][j].treasure.name + ".png' class='treasureImage'>");
       }
+      if(cards[i][j].player){
+        $("th#card" + i + "_" + j).append("<img src='img/" +  cards[i][j].player.name + ".png' class='playerImage'>");
+      }
     };
   };
   var cardToUse = "<img class='rotate" + game.board.freeCard.rotationAngle + "' src='img/" + this.images[game.board.freeCard.type] + "' id='freeCard'>";
   $("#cardToUse").html(cardToUse);
+  if(game.board.freeCard.treasure){
+    $("#cardToUse").append("<img src='img/" + game.board.freeCard.treasure.name + ".png' id='freeCardTreasure'>");
+  }
 }
 
 Board.prototype.initializeCards = function(){
@@ -464,15 +470,24 @@ UserInterface.prototype.attachListeners = function(){
     game.board.freeCard.rotate();
     game.userInterface.showBoard(game.boardSize, game.board.cards);
   });
+  $("#cardToUse").on("click", "#freeCardTreasure", function(){
+    game.board.freeCard.rotate();
+    game.userInterface.showBoard(game.boardSize, game.board.cards);
+  });
 }
 
 $(document).ready(function(){
   //attachListeners();
   game.initialize();
-  var player1 = new Player("Player 1");
+  var player1 = new Player("player1");
   game.addPlayer(player1);
-  // var player2 = new Player("Player 2");
-  // game.addPlayer(player2);
+  var player2 = new Player("player2");
+  game.addPlayer(player2);
+  var player3 = new Player("player3");
+  game.addPlayer(player3);
+  var player4 = new Player("player4");
+  game.addPlayer(player4);
+  game.userInterface.showBoard(game.boardSize, game.board.cards);
 
   console.log(game.board.cards);
   //game.board.removeItem(0, 0, 0);
