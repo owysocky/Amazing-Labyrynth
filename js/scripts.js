@@ -59,6 +59,7 @@ Game.prototype.clickCard = function(x, y){
   if (this.board.cards[x][y].player === null) {
     this.board.removePlayer(playerCard.x, playerCard.y);
     this.board.placePlayer(this.currentPlayer, x, y);
+    this.userInterface.showBoard(this.boardSize, this.board.cards);
     this.switchPlayer();
   }
 }
