@@ -15,7 +15,7 @@ Game.prototype.initialize = function(){
   // initialize Players positions, treasures positions
   this.userInterface = new UserInterface();
   //this.userInterface.onCardClick = this.clickCard;
-  //this.userInterface.onArrowClick = this.clickArrow;
+  this.userInterface.onArrowClick = this.clickArrow;
   //this.userInterface.assignRandomImages(this.boardSize);
   this.userInterface.showBoard(this.boardSize, this.board.cards);
   this.userInterface.attachListeners();
@@ -32,15 +32,23 @@ UserInterface.prototype.onCardClick = function(callback){
 }
 
 Game.prototype.clickCard = function(x, y){
-  var accessibleCards = this.board.getAccessibleCards(x, y);
-  console.log(accessibleCards);
-  console.log(this.userInterface);
-  this.userInterface.HighlightCards(accessibleCards, true);
+  var playerCard = this.board.findItem(this.currentPlayer.id);
+  console.log(playerCard);
+  this.board.removeItem(this.currentPlayer.id, playerCard.x, playerCard.y);
+  this.board.placeItem(this.currentPlayer.id, x, y);
+  console.log(x);
+  console.log(y);
 }
 
 Game.prototype.clickArrow = function(x, y){
   game.board.pushingCard(x, y, game.board.freeCard);
   game.userInterface.showBoard(game.boardSize, game.board.cards);
+  this.accessibleCards = [];
+  var playerCard = this.board.findItem(this.currentPlayer.id);
+  this.accessibleCards = this.board.getAccessibleCards(playerCard.x, playerCard.y);
+  console.log(this.accessibleCards);
+  console.log(this.userInterface);
+  this.userInterface.HighlightCards(this.accessibleCards, true);
 }
 
 Game.prototype.addPlayer = function(player){
@@ -394,7 +402,9 @@ UserInterface.prototype.attachListeners = function(){
       var underlineIndex = this.id.indexOf("_");
       var x = parseInt(this.id.substring(5, underlineIndex));
       var y = parseInt(this.id.substring(underlineIndex + 1, this.id.length));
-        userInt.onArrowClick(x, y);
+        //userInt.onArrowClick(x, y);
+
+      game.clickArrow(x, y);
     }
 
 
