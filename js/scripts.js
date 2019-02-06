@@ -14,8 +14,8 @@ Game.prototype.initialize = function(){
   this.board.initializeCards();
   // initialize Players positions, treasures positions
   this.userInterface = new UserInterface();
-  this.userInterface.onCardClick= this.clickCard;
-  this.userInterface.onArrowClick = this.clickArrow;
+  //this.userInterface.onCardClick = this.clickCard;
+  //this.userInterface.onArrowClick = this.clickArrow;
   //this.userInterface.assignRandomImages(this.boardSize);
   this.userInterface.showBoard(this.boardSize, this.board.cards);
   this.userInterface.attachListeners();
@@ -26,8 +26,14 @@ function Player(name){
   this.treasures = [];
 }
 
+UserInterface.prototype.onCardClick = function(callback){
+  //callback();
+  callback.apply(this);
+}
+
 Game.prototype.clickCard = function(x, y){
-  alert(0);
+  var accessibleCards = this.board.getAccessibleCards(x, y);
+  console.log(accessibleCards);
 }
 
 Game.prototype.clickArrow = function(x, y){
@@ -148,9 +154,12 @@ Board.prototype.getAccessibleCards = function(x, y){
   this.nodes = [];
   for (var i = 0; i < this.cards.length; i++) {
     for (var j = 0; j < this.cards[i].length; j++) {
-      makeEdges(this.cards[i][j]);
+      this.makeEdges(this.cards[i][j]);
     };
   };
+
+  console.log(this);
+
 
   traverceGraphInDeep(this.cards[x][y].node);
 
@@ -199,13 +208,13 @@ Card.prototype.setWalls = function(){
   } else if (this.type === 1) { // corner left-bottom path
     if (this.rotationAngle === 0) {
       this.topWall = true;
-      this.leftWall = true;
+      this.rightWall = true;
     } else if (this.rotationAngle === 90) {
       this.bottomWall = true;
       this.rightWall = true;
     } else if (this.rotationAngle === 180) {
       this.bottomWall = true;
-      this.rightWall = true;
+      this.leftWall = true;
     } else {
       this.topWall = true;
       this.leftWall = true;
@@ -222,49 +231,34 @@ Card.prototype.setWalls = function(){
     }
   }
 }
+Card.prototype.showWalls = function(){
+  console.log(this.x.toString() + " " + this.y.toString() + " top: " + this.topWall.toString() + " right: " + this.rightWall.toString() + " bottom: " + this.bottomWall.toString() + " left: " + this.leftWall.toString());
+}
 
 Board.prototype.makeEdges = function(card){
+
   this.nodes.push(card.node);
   card.node.edges = [];
+  card.node.visited = false;
+
   var x = card.x - 1;
-  if (x >= 0 && cards[x][card.y].bottomWall === false && card.topWall === false) {
-    card.node.edges.push(cards[x][card.y].node);
+  if (x >= 0 && this.cards[x][card.y].bottomWall == false && card.topWall == false) {
+    card.node.edges.push(this.cards[x][card.y].node);
   }
+
   x = card.x + 1;
-  if (x <= 2 && cards[x][this.y].topWall === false && card.bottomWall === false) {
-    card.node.edges.push(cards[x][card.y].node);
+  if ((x < this.size) && (this.cards[x][card.y].topWall == false) && (card.bottomWall == false)) {
+    card.node.edges.push(this.cards[x][card.y].node);
   }
   var y = card.y - 1;
-  if (y >= 0 && cards[card.x][y].rightWall === false && card.leftWall === false) {
-    card.node.edges.push(cards[card.x][y].node);
+  if (y >= 0 && this.cards[card.x][y].rightWall == false && card.leftWall == false) {
+    card.node.edges.push(this.cards[card.x][y].node);
   }
   y = card.y + 1;
-  if (y <= 2 && cards[card.x][y].leftWall === false && card.rightWall === false) {
-    card.node.edges.push(cards[card.x][y].node);
+  if (y < this.size && this.cards[card.x][y].leftWall == false && card.rightWall == false) {
+    card.node.edges.push(this.cards[card.x][y].node);
   }
 };
-//
-// Card.prototype.makeGraph = function(){
-//   nodes.push(this.node);
-//   var x = this.x - 1;
-//   console.log(cards);
-//   console.log(this);
-//   if (x >= 0 && cards[x][this.y].bottomWall === false && this.topWall === false) {
-//     this.node.edges.push(cards[x][this.y].node);
-//   }
-//   x = this.x + 1;
-//   if (x <= 2 && cards[x][this.y].topWall === false && this.bottomWall === false) {
-//     this.node.edges.push(cards[x][this.y].node);
-//   }
-//   var y = this.y - 1;
-//   if (y >= 0 && cards[this.x][y].rightWall === false && this.leftWall === false) {
-//     this.node.edges.push(cards[this.x][y].node);
-//   }
-//   y = this.y + 1;
-//   if (y <= 2 && cards[this.x][y].leftWall === false && this.rightWall === false) {
-//     this.node.edges.push(cards[this.x][y].node);
-//   }
-// };
 
 function UserInterface(){
   this.images = ["straight.png", "corner.png", "t-shape.png"]
@@ -365,7 +359,8 @@ UserInterface.prototype.attachListeners = function(){
       var x = parseInt(this.id.substring(4, underlineIndex));
       var y = parseInt(this.id.substring(underlineIndex + 1, this.id.length));
 
-      userInt.onCardClick();
+      game.clickCard(x, y);
+      //userInt.onCardClick(game.clickCard);
 
     } else if (this.id.indexOf("arrow") !== -1){
       var underlineIndex = this.id.indexOf("_");
