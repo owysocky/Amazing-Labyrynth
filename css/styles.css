@@ -3,9 +3,9 @@ img.highlight{
 }
 
 img{
-  width: 100px;
+  width: 120px;
   border: 2px solid #A45F24; //#664B2F; //#513324; //#D57719;//#E0624C;
-  border-radius: 25px;
+  border-radius: 35px;
 }
 
 th {
@@ -56,12 +56,25 @@ body {
 }
 
 #cardToUse{
-  margin-left: 250px;
+  margin-left: 290px;
 }
 
 #cardToUseText{
-  margin-left: 225px;
+  margin-left: 270px;
 }
+
+th{
+  position: relative;
+}
+
+.treasureImage{
+  position: absolute;
+  top: 25%;
+  left: 25%;
+  width: 60%;
+  border: none;
+}
+
 
 /*
 .over {

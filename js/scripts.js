@@ -377,6 +377,13 @@ UserInterface.prototype.showBoard = function(size, cards){
 
   };
   tag.html(htmlText);
+  for(var i = 0; i < size; i++){
+    for(var j = 0; j < size; j++){
+      if(cards[i][j].treasure){
+        $("th#card" + i + "_" + j).append("<img src='img/" +  cards[i][j].treasure.name + ".png' class='treasureImage'>");
+      }
+    };
+  };
   var cardToUse = "<img class='rotate" + game.board.freeCard.rotationAngle + "' src='img/" + this.images[game.board.freeCard.type] + "' id='freeCard'>";
   $("#cardToUse").html(cardToUse);
 }
