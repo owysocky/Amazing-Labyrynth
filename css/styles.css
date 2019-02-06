@@ -75,6 +75,15 @@ th{
   border: none;
 }
 
+.playerImage{
+  position: absolute;
+  top: 22%;
+  left: 22%;
+  width: 60%;
+  opacity: .5;
+  border: none;
+}
+
 #freeCardTreasure{
   position: absolute;
   top: 22%;

@@ -383,7 +383,7 @@ UserInterface.prototype.showBoard = function(size, cards){
         $("th#card" + i + "_" + j).append("<img src='img/" +  cards[i][j].treasure.name + ".png' class='treasureImage'>");
       }
       if(cards[i][j].player){
-
+        $("th#card" + i + "_" + j).append("<img src='img/" +  cards[i][j].player.name + ".png' class='playerImage'>");
       }
     };
   };
@@ -456,16 +456,24 @@ UserInterface.prototype.attachListeners = function(){
     game.board.freeCard.rotate();
     game.userInterface.showBoard(game.boardSize, game.board.cards);
   });
+  $("#cardToUse").on("click", "#freeCardTreasure", function(){
+    game.board.freeCard.rotate();
+    game.userInterface.showBoard(game.boardSize, game.board.cards);
+  });
 }
 
 $(document).ready(function(){
   //attachListeners();
   game.initialize();
-  var player1 = new Player("Player 1");
+  var player1 = new Player("player1");
   game.addPlayer(player1);
-  var player2 = new Player("Player 2");
+  var player2 = new Player("player2");
   game.addPlayer(player2);
-
+  var player3 = new Player("player3");
+  game.addPlayer(player3);
+  var player4 = new Player("player4");
+  game.addPlayer(player4);
+  game.userInterface.showBoard(game.boardSize, game.board.cards);
   console.log(game.board.cards);
   //game.board.removeItem(0, 0, 0);
   console.log(game.board.cards);
