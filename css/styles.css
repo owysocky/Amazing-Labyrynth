@@ -1,14 +1,26 @@
+img.highlight{
+  border: 5px solid #ffa64d; //#E0624C;
+}
+
 img{
   width: 100px;
+  border: 2px solid #A45F24; //#664B2F; //#513324; //#D57719;//#E0624C;
+  border-radius: 25px;
 }
 
 th {
   text-align: center;
 }
 
+body {
+  background-color: #F0E5CF;
+}
+
+
 .arrow {
   width: 50px;
   padding: 5px;
+  border: 0px solid #E0624C; //#d13c3c;
 }
 
 .rotate0 {
