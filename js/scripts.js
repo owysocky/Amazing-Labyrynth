@@ -3,10 +3,11 @@ function Game(size){
   this.playerId = 0,
   this.currentPlayer,
   this.treasures = [],
-  this.treasureId = 10,
+  this.treasureId = 0,
   this.currentTreasure,
   this.boardSize = size,
-  this.defaulPlayerPosition = [[0, 0], [0, size-1], [size-1, 0], [size-1, size-1]]
+  this.defaulPlayerPosition = [[0, 0], [0, size-1], [size-1, 0], [size-1, size-1]],
+  this.gameOver = false
 }
 
 Game.prototype.initialize = function(){
@@ -25,14 +26,29 @@ Game.prototype.initialize = function(){
 }
 
 Game.prototype.initializeTreasures = function(){
+  console.log(this);
   var count = 1;
   while (count <= numTreasures){
     var x = Math.floor(Math.random() * boardSize);
     var y = Math.floor(Math.random() * boardSize);
-    if(!this.board.cards[x][y].treasure){
-      this.board.cards[x][y].treasure = new Treasure("treasure" + count);
+
+    if (!(this.board.checkTreasure(x, y))){
+      var treasure = new Treasure("treasure" + count);
+      treasure.id = this.treasureId;
+      this.treasureId += 1;
+      this.treasures.push(treasure);
+      if (treasure.id === 0) {
+        this.currentTreasure = treasure;
+      }
+      this.board.placeTreasure(treasure, x, y);
       count++;
     }
+    // if(!this.board.cards[x][y].treasure){
+    //   this.board.cards[x][y].treasure = new Treasure("treasure" + count);
+    //
+    //   count++;
+    // }
+
   }
 }
 
@@ -45,6 +61,16 @@ function Player(name){
   this.treasures = [];
 }
 
+Game.prototype.checkTreasure = function(x, y){
+  var treasureOnTheCard = this.board.returnTreasure(x, y);
+  if (treasureOnTheCard !== null){
+    if (treasureOnTheCard === this.currentTreasure){
+      return true;
+    }
+  }
+  return false;
+}
+
 function Treasure(name){
   this.name = name;
 }
@@ -54,12 +80,43 @@ UserInterface.prototype.onCardClick = function(callback){
   callback.apply(this);
 }
 
+Board.prototype.returnTreasure = function(x, y) {
+  return this.cards[x][y].treasure;
+}
+
+Game.prototype.addTreasureToPlayer = function(){
+  this.currentPlayer.treasures.push(this.currentTreasure);
+}
+
+Game.prototype.setNewTreasure = function(){
+  if(this.currentTreasure.id < this.treasures.length-1){
+    this.currentTreasure = this.treasures[this.currentTreasure.id + 1];
+    return true;
+  }
+  return false;
+}
+
+Game.prototype.gameOver = function(){
+  this.gameOver = true;
+}
+
 Game.prototype.clickCard = function(x, y){
   var playerCard = this.board.findPlayer(this.currentPlayer);
   if (this.board.cards[x][y].player === null) {
     this.board.removePlayer(playerCard.x, playerCard.y);
     this.board.placePlayer(this.currentPlayer, x, y);
-    this.switchPlayer();
+
+    if (this.checkTreasure(x, y) === true){
+      this.addTreasureToPlayer();
+      this.board.removeTreasure(x, y);
+      this.gameOver = !(this.setNewTreasure()); // couldn't set new treasure -> game over
+    }
+
+    if (!(this.gameOver)) {
+      this.switchPlayer();
+    } else {
+      this.userInterface.gameOver();
+    }
   }
 }
 
@@ -191,12 +248,31 @@ Board.prototype.placePlayer = function(player, x, y){
   this.cards[x][y].placePlayer(player);
 }
 
+Board.prototype.checkTreasure = function(x, y){
+  return this.cards[x][y].checkTreasure();
+}
+
+Board.prototype.placeTreasure = function(treasure, x, y){
+  this.cards[x][y].placeTreasure(treasure);
+}
+
 Board.prototype.removePlayer = function(x, y){
   this.cards[x][y].removePlayer();
 }
 
 Board.prototype.removeTreasure = function(x, y){
   this.cards[x][y].removeTreasure();
+}
+
+Card.prototype.checkTreasure = function(){
+  if (this.treasure !== null){
+    return true;
+  }
+  return false;
+}
+
+Card.prototype.placeTreasure = function(treasure){
+  this.treasure = treasure;
 }
 Card.prototype.placePlayer = function(player){
   this.player = player;
@@ -223,9 +299,6 @@ Board.prototype.getAccessibleCards = function(x, y){
       this.makeEdges(this.cards[i][j]);
     };
   };
-
-  console.log(this);
-
 
   traverceGraphInDeep(this.cards[x][y].node);
 
@@ -343,6 +416,10 @@ UserInterface.prototype.HighlightCards = function(accessibleCards, highlight){
   }
 }
 
+UserInterface.prototype.gameOver = function(){
+  alert("Game over");
+}
+
 UserInterface.prototype.showBoard = function(size, cards){
   var tag = $("#board");
   var htmlText = "";
@@ -432,7 +509,7 @@ Card.prototype.setInitialParameters = function(){
 }
 
 var boardSize = 5;
-var numTreasures = 8;
+var numTreasures = 2;
 
 var game = new Game(boardSize);
 
