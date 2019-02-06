@@ -57,7 +57,7 @@ UserInterface.prototype.onCardClick = function(callback){
 Game.prototype.clickCard = function(x, y){
   var playerCard = this.board.findPlayer(this.currentPlayer);
   if (this.board.cards[x][y].player === null) {
-    this.board.removePlayer(this.currentPlayer, playerCard.x, playerCard.y);
+    this.board.removePlayer(playerCard.x, playerCard.y);
     this.board.placePlayer(this.currentPlayer, x, y);
     this.switchPlayer();
   }
@@ -98,8 +98,10 @@ function Board(size) {
 
 Board.prototype.pushingCard = function(x, y, pushCard){
   var spareCard; //The card that will get pushed out
-  if(y === 0 || y === this.cards.length - 1){ //Inserting the card into a row
+
+  if(y === 0 || y === this.cards.length - 1) { //Inserting the card into a row
     if(y === 0){ //Direction is left to right
+      this.leavePlayerOnBoard(this.cards[x][this.cards.length - 1], this.freeCard);
       spareCard = this.cards[x][this.cards.length - 1];
       spareCard.x = -1; //Resetting cooirdinates of spare card
       spareCard.y = -1;
@@ -111,7 +113,9 @@ Board.prototype.pushingCard = function(x, y, pushCard){
       this.cards[x][0].x = x;
       this.cards[x][0].y = 0;
       this.freeCard = spareCard;
+
     }else{ //Direction is right to left
+      this.leavePlayerOnBoard(this.cards[x][0], this.freeCard);
       spareCard = this.cards[x][0];
       spareCard.x = -1; //Resetting cooirdinates of spare card
       spareCard.y = -1;
@@ -124,8 +128,9 @@ Board.prototype.pushingCard = function(x, y, pushCard){
       this.cards[x][this.cards.length - 1].y = this.cards.length - 1;
       this.freeCard = spareCard;
     }
-  }else{ //Inserting the card into a column
+  } else { //Inserting the card into a column
     if(x === 0){ //Direction is top to bottom
+      this.leavePlayerOnBoard(this.cards[this.cards.length - 1][y], this.freeCard);
       spareCard = this.cards[this.cards.length - 1][y];
       spareCard.x = -1;
       spareCard.y = -1;
@@ -137,7 +142,9 @@ Board.prototype.pushingCard = function(x, y, pushCard){
       this.cards[0][y].x = 0;
       this.cards[0][y].y = y;
       this.freeCard = spareCard;
+
     }else{ //Direction is bottom to top
+      this.leavePlayerOnBoard(this.cards[0][y], this.freeCard);
       spareCard = this.cards[0][y];
       spareCard.x = -1;
       spareCard.y = -1;
@@ -184,7 +191,7 @@ Board.prototype.placePlayer = function(player, x, y){
   this.cards[x][y].placePlayer(player);
 }
 
-Board.prototype.removePlayer = function(id, x, y){
+Board.prototype.removePlayer = function(x, y){
   this.cards[x][y].removePlayer();
 }
 
@@ -199,6 +206,13 @@ Card.prototype.removeTreasure = function(){
 }
 Card.prototype.removePlayer = function(){
   this.player = null;
+}
+
+Board.prototype.leavePlayerOnBoard = function(boardCard, newCard){
+  if (boardCard.player !== null){
+    newCard.player = boardCard.player;
+    boardCard.player = null;
+  }
 }
 
 //form a list of cards that can be reached from the position x,y
@@ -450,8 +464,8 @@ $(document).ready(function(){
   game.initialize();
   var player1 = new Player("Player 1");
   game.addPlayer(player1);
-  var player2 = new Player("Player 2");
-  game.addPlayer(player2);
+  // var player2 = new Player("Player 2");
+  // game.addPlayer(player2);
 
   console.log(game.board.cards);
   //game.board.removeItem(0, 0, 0);
