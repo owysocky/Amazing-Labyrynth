@@ -12,7 +12,10 @@ function Game(size){
 Game.prototype.initialize = function(){
   this.board = new Board(this.boardSize);
   this.board.initializeCards();
-  // initialize Players positions, treasures positions
+  //Add method to initialize players here
+  var player1 = new Player("Player 1");
+  this.addPlayer(player1);
+  this.initializeTreasures();
   this.userInterface = new UserInterface();
   //this.userInterface.onCardClick = this.clickCard;
   this.userInterface.onArrowClick = this.clickArrow;
@@ -21,9 +24,25 @@ Game.prototype.initialize = function(){
   this.userInterface.attachListeners();
 }
 
+Game.prototype.initializeTreasures = function(){
+  var count = 1;
+  while (count <= numTreasures){
+    var x = Math.floor(Math.random() * boardSize);
+    var y = Math.floor(Math.random() * boardSize);
+    if(!this.board.cards[x][y].treasure){
+      this.board.cards[x][y].treasure = new Treasure("treasure" + count);
+      count++;
+    }
+  }
+}
+
 function Player(name){
   this.name = name;
   this.treasures = [];
+}
+
+function Treasure(name){
+  this.name = name;
 }
 
 UserInterface.prototype.onCardClick = function(callback){
@@ -142,7 +161,6 @@ Board.prototype.findCard = function(id){
   return false;
 }
 
-// finds Player or Treasure by id
 Board.prototype.findPlayer = function(player){
   for (var i = 0; i < this.cards.length; i++) {
     for (var j = 0; j < this.cards[i].length; j++) {
@@ -155,7 +173,6 @@ Board.prototype.findPlayer = function(player){
   }
   return false;
 }
-
 
 Board.prototype.placePlayer = function(player, x, y){
   this.cards[x][y].placePlayer(player);
@@ -205,8 +222,8 @@ function Card(id, x, y){
   this.id = id,
   this.x = x,
   this.y = y,
-  this.player = null, // array of players and treasures id
-  this.treasure = null,
+  this.player = null;
+  this.treasure = null;
   this.rightWall = false,
   this.leftWall = false,
   this.topWall = false,
@@ -341,7 +358,7 @@ UserInterface.prototype.showBoard = function(size, cards){
 
     // adding bottom row with arrows
     if (i === size - 1) {
-      htmlText += "<tr id='" + (i-1).toString() + "'>";
+      htmlText += "<tr id='" + boardSize + "'>";
       for (var j = -1; j < size + 1; j++) {
         if ((j % 2 === 1) && j !== size) {
           htmlText += "<th id='arrow" + i.toString() + "_" + j.toString() + "'><img class='rotate0 arrow' src='img/arrow.png'></th>";
@@ -388,6 +405,7 @@ Card.prototype.setInitialParameters = function(){
 }
 
 var boardSize = 5;
+var numTreasures = 8;
 
 var game = new Game(boardSize);
 
@@ -424,9 +442,8 @@ UserInterface.prototype.attachListeners = function(){
 $(document).ready(function(){
   //attachListeners();
   game.initialize();
-
-  var player1 = new Player("Player 1");
-  game.addPlayer(player1);
+  // var player1 = new Player("Player 1");
+  // game.addPlayer(player1);
 
   console.log(game.board.cards);
   //game.board.removeItem(0, 0, 0);
