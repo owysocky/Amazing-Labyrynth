@@ -13,8 +13,8 @@ Game.prototype.initialize = function(){
   this.board = new Board(this.boardSize);
   this.board.initializeCards();
   //Add method to initialize players here
-  var player1 = new Player("Player 1");
-  this.addPlayer(player1);
+  // var player1 = new Player("Player 1");
+  // this.addPlayer(player1);
   this.initializeTreasures();
   this.userInterface = new UserInterface();
   //this.userInterface.onCardClick = this.clickCard;
@@ -36,6 +36,10 @@ Game.prototype.initializeTreasures = function(){
   }
 }
 
+Game.prototype.switchPlayer = function(){
+  this.currentPlayer = this.players[(this.currentPlayer.id + 1) % this.players.length];
+}
+
 function Player(name){
   this.name = name;
   this.treasures = [];
@@ -52,9 +56,11 @@ UserInterface.prototype.onCardClick = function(callback){
 
 Game.prototype.clickCard = function(x, y){
   var playerCard = this.board.findPlayer(this.currentPlayer);
-  this.board.removePlayer(this.currentPlayer, playerCard.x, playerCard.y);
-  this.board.placePlayer(this.currentPlayer, x, y);
-  //if (this.currentTreasure.id){}
+  if (this.board.cards[x][y].player === null) {
+    this.board.removePlayer(this.currentPlayer, playerCard.x, playerCard.y);
+    this.board.placePlayer(this.currentPlayer, x, y);
+    this.switchPlayer();
+  }
 }
 
 Game.prototype.clickArrow = function(x, y){
@@ -442,8 +448,10 @@ UserInterface.prototype.attachListeners = function(){
 $(document).ready(function(){
   //attachListeners();
   game.initialize();
-  // var player1 = new Player("Player 1");
-  // game.addPlayer(player1);
+  var player1 = new Player("Player 1");
+  game.addPlayer(player1);
+  var player2 = new Player("Player 2");
+  game.addPlayer(player2);
 
   console.log(game.board.cards);
   //game.board.removeItem(0, 0, 0);
