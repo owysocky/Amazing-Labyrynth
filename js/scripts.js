@@ -7,7 +7,8 @@ function Game(size){
   this.currentTreasure,
   this.boardSize = size,
   this.defaulPlayerPosition = [[0, 0], [0, size-1], [size-1, 0], [size-1, size-1]],
-  this.gameOver = false
+  this.gameOver = false,
+  this.gameState = 0
 }
 
 Game.prototype.initialize = function(){
@@ -101,34 +102,40 @@ Game.prototype.gameOver = function(){
 }
 
 Game.prototype.clickCard = function(x, y){
-  var playerCard = this.board.findPlayer(this.currentPlayer);
-  if (this.board.cards[x][y].player === null) {
-    this.board.removePlayer(playerCard.x, playerCard.y);
-    this.board.placePlayer(this.currentPlayer, x, y);
+  if(this.gameState % 2 === 1){
+    var playerCard = this.board.findPlayer(this.currentPlayer);
+    if (this.board.cards[x][y].player === null) {
+      this.board.removePlayer(playerCard.x, playerCard.y);
+      this.board.placePlayer(this.currentPlayer, x, y);
 
-    if (this.checkTreasure(x, y) === true){
-      this.addTreasureToPlayer();
-      this.board.removeTreasure(x, y);
-      this.gameOver = !(this.setNewTreasure()); // couldn't set new treasure -> game over
-    }
+      if (this.checkTreasure(x, y) === true){
+        this.addTreasureToPlayer();
+        this.board.removeTreasure(x, y);
+        this.gameOver = !(this.setNewTreasure()); // couldn't set new treasure -> game over
+      }
 
-    if (!(this.gameOver)) {
-      this.switchPlayer();
-    } else {
-      this.userInterface.gameOver();
+      if (!(this.gameOver)) {
+        this.switchPlayer();
+      } else {
+        this.userInterface.gameOver();
+      }
+      this.gameState++;
     }
   }
 }
 
 Game.prototype.clickArrow = function(x, y){
-  game.board.pushingCard(x, y, game.board.freeCard);
-  game.userInterface.showBoard(game.boardSize, game.board.cards);
-  this.accessibleCards = [];
-  var playerCard = this.board.findPlayer(this.currentPlayer);
-  this.accessibleCards = this.board.getAccessibleCards(playerCard.x, playerCard.y);
-  console.log(this.accessibleCards);
-  console.log(this.userInterface);
-  this.userInterface.HighlightCards(this.accessibleCards, true);
+  if(this.gameState % 2 === 0){
+    game.board.pushingCard(x, y, game.board.freeCard);
+    game.userInterface.showBoard(game.boardSize, game.board.cards);
+    this.accessibleCards = [];
+    var playerCard = this.board.findPlayer(this.currentPlayer);
+    this.accessibleCards = this.board.getAccessibleCards(playerCard.x, playerCard.y);
+    console.log(this.accessibleCards);
+    console.log(this.userInterface);
+    this.userInterface.HighlightCards(this.accessibleCards, true);
+    this.gameState++;
+  }
 }
 
 Game.prototype.addPlayer = function(player){
@@ -407,11 +414,11 @@ function UserInterface(){
 UserInterface.prototype.HighlightCards = function(accessibleCards, highlight){
   if (highlight) {
     for (var i = 0; i < accessibleCards.length; i++) {
-      $("#card" + accessibleCards[i].x.toString() + "_" + accessibleCards[i].y.toString()).children().addClass("highlight");
+      $("#card" + accessibleCards[i].x.toString() + "_" + accessibleCards[i].y.toString()).children().first().addClass("highlight");
     };
   } else {
     for (var i = 0; i < accessibleCards.length; i++) {
-      $("#card" + accessibleCards[i].x.toString() + "_" + accessibleCards[i].y.toString()).childern().deleteClass("highlight");
+      $("#card" + accessibleCards[i].x.toString() + "_" + accessibleCards[i].y.toString()).childern().first().deleteClass("highlight");
     };
   }
 }
@@ -473,10 +480,16 @@ UserInterface.prototype.showBoard = function(size, cards){
       if(cards[i][j].treasure){
         $("th#card" + i + "_" + j).append("<img src='img/" +  cards[i][j].treasure.name + ".png' class='treasureImage'>");
       }
+      if(cards[i][j].player){
+        $("th#card" + i + "_" + j).append("<img src='img/" +  cards[i][j].player.name + ".png' class='playerImage'>");
+      }
     };
   };
   var cardToUse = "<img class='rotate" + game.board.freeCard.rotationAngle + "' src='img/" + this.images[game.board.freeCard.type] + "' id='freeCard'>";
   $("#cardToUse").html(cardToUse);
+  if(game.board.freeCard.treasure){
+    $("#cardToUse").append("<img src='img/" + game.board.freeCard.treasure.name + ".png' id='freeCardTreasure'>");
+  }
 }
 
 Board.prototype.initializeCards = function(){
@@ -541,15 +554,24 @@ UserInterface.prototype.attachListeners = function(){
     game.board.freeCard.rotate();
     game.userInterface.showBoard(game.boardSize, game.board.cards);
   });
+  $("#cardToUse").on("click", "#freeCardTreasure", function(){
+    game.board.freeCard.rotate();
+    game.userInterface.showBoard(game.boardSize, game.board.cards);
+  });
 }
 
 $(document).ready(function(){
   //attachListeners();
   game.initialize();
-  var player1 = new Player("Player 1");
+  var player1 = new Player("player1");
   game.addPlayer(player1);
-  // var player2 = new Player("Player 2");
-  // game.addPlayer(player2);
+  var player2 = new Player("player2");
+  game.addPlayer(player2);
+  var player3 = new Player("player3");
+  game.addPlayer(player3);
+  var player4 = new Player("player4");
+  game.addPlayer(player4);
+  game.userInterface.showBoard(game.boardSize, game.board.cards);
 
   console.log(game.board.cards);
   //game.board.removeItem(0, 0, 0);
