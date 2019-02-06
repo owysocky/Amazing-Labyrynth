@@ -55,7 +55,7 @@ body {
     transform: rotate(270deg);
 }
 
-#cardToUse{
+#cardToUseTable{
   margin-left: 290px;
 }
 
@@ -69,12 +69,19 @@ th{
 
 .treasureImage{
   position: absolute;
-  top: 25%;
-  left: 25%;
+  top: 22%;
+  left: 22%;
   width: 60%;
   border: none;
 }
 
+#freeCardTreasure{
+  position: absolute;
+  top: 22%;
+  left: 22%;
+  width: 60%;
+  border: none;
+}
 
 /*
 .over {
