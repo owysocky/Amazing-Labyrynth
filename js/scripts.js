@@ -32,19 +32,17 @@ UserInterface.prototype.onCardClick = function(callback){
 }
 
 Game.prototype.clickCard = function(x, y){
-  var playerCard = this.board.findItem(this.currentPlayer.id);
-  console.log(playerCard);
-  this.board.removeItem(this.currentPlayer.id, playerCard.x, playerCard.y);
-  this.board.placeItem(this.currentPlayer.id, x, y);
-  console.log(x);
-  console.log(y);
+  var playerCard = this.board.findPlayer(this.currentPlayer);
+  this.board.removePlayer(this.currentPlayer, playerCard.x, playerCard.y);
+  this.board.placePlayer(this.currentPlayer, x, y);
+  //if (this.currentTreasure.id){}
 }
 
 Game.prototype.clickArrow = function(x, y){
   game.board.pushingCard(x, y, game.board.freeCard);
   game.userInterface.showBoard(game.boardSize, game.board.cards);
   this.accessibleCards = [];
-  var playerCard = this.board.findItem(this.currentPlayer.id);
+  var playerCard = this.board.findPlayer(this.currentPlayer);
   this.accessibleCards = this.board.getAccessibleCards(playerCard.x, playerCard.y);
   console.log(this.accessibleCards);
   console.log(this.userInterface);
@@ -63,7 +61,7 @@ Game.prototype.addPlayer = function(player){
   this.players.push(player);
   player.id = this.playerId;
 
-  this.board.placeItem(player.id, this.defaulPlayerPosition[player.id][0], this.defaulPlayerPosition[player.id][1]);
+  this.board.placePlayer(player, this.defaulPlayerPosition[player.id][0], this.defaulPlayerPosition[player.id][1]);
   this.playerId += 1;
 
   return true;
@@ -145,11 +143,11 @@ Board.prototype.findCard = function(id){
 }
 
 // finds Player or Treasure by id
-Board.prototype.findItem = function(id){
+Board.prototype.findPlayer = function(player){
   for (var i = 0; i < this.cards.length; i++) {
     for (var j = 0; j < this.cards[i].length; j++) {
       if (this.cards[i][j]){
-        if (this.cards[i][j].items.indexOf(id) !== -1) {
+        if (this.cards[i][j].player === player) {
           return this.cards[i][j];
         }
       }
@@ -158,19 +156,26 @@ Board.prototype.findItem = function(id){
   return false;
 }
 
-// place Player or Treasure Id on the board
-Board.prototype.placeItem = function(itemId, x, y){
-  this.cards[x][y].items.push(itemId);
+
+Board.prototype.placePlayer = function(player, x, y){
+  this.cards[x][y].placePlayer(player);
 }
 
-// removes Player or Treasure Id from the board
-Board.prototype.removeItem = function(id, x, y){
-  var items = this.cards[x][y].items;
-  if (items.indexOf(id) !== -1){
-    items.splice(items.indexOf(id), 1);
-    return true;
-  }
-  return false;
+Board.prototype.removePlayer = function(id, x, y){
+  this.cards[x][y].removePlayer();
+}
+
+Board.prototype.removeTreasure = function(x, y){
+  this.cards[x][y].removeTreasure();
+}
+Card.prototype.placePlayer = function(player){
+  this.player = player;
+}
+Card.prototype.removeTreasure = function(){
+  this.treasure = null;
+}
+Card.prototype.removePlayer = function(){
+  this.player = null;
 }
 
 //form a list of cards that can be reached from the position x,y
@@ -200,7 +205,8 @@ function Card(id, x, y){
   this.id = id,
   this.x = x,
   this.y = y,
-  this.items = [], // array of players and treasures id
+  this.player = null, // array of players and treasures id
+  this.treasure = null,
   this.rightWall = false,
   this.leftWall = false,
   this.topWall = false,
