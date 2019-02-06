@@ -6,7 +6,8 @@ function Game(size){
   this.treasureId = 10,
   this.currentTreasure,
   this.boardSize = size,
-  this.defaulPlayerPosition = [[0, 0], [0, size-1], [size-1, 0], [size-1, size-1]]
+  this.defaulPlayerPosition = [[0, 0], [0, size-1], [size-1, 0], [size-1, size-1]],
+  this.gameState = 0;
 }
 
 Game.prototype.initialize = function(){
@@ -55,24 +56,30 @@ UserInterface.prototype.onCardClick = function(callback){
 }
 
 Game.prototype.clickCard = function(x, y){
-  var playerCard = this.board.findPlayer(this.currentPlayer);
-  if (this.board.cards[x][y].player === null) {
-    this.board.removePlayer(playerCard.x, playerCard.y);
-    this.board.placePlayer(this.currentPlayer, x, y);
-    this.userInterface.showBoard(this.boardSize, this.board.cards);
-    this.switchPlayer();
+  if(this.gameState % 2 === 1){
+    var playerCard = this.board.findPlayer(this.currentPlayer);
+    if (this.board.cards[x][y].player === null) {
+      this.board.removePlayer(playerCard.x, playerCard.y);
+      this.board.placePlayer(this.currentPlayer, x, y);
+      this.userInterface.showBoard(this.boardSize, this.board.cards);
+      this.gameState++;
+      this.switchPlayer();
+    }
   }
 }
 
 Game.prototype.clickArrow = function(x, y){
-  game.board.pushingCard(x, y, game.board.freeCard);
-  game.userInterface.showBoard(game.boardSize, game.board.cards);
-  this.accessibleCards = [];
-  var playerCard = this.board.findPlayer(this.currentPlayer);
-  this.accessibleCards = this.board.getAccessibleCards(playerCard.x, playerCard.y);
-  console.log(this.accessibleCards);
-  console.log(this.userInterface);
-  this.userInterface.HighlightCards(this.accessibleCards, true);
+  if(this.gameState % 2 === 0){
+    game.board.pushingCard(x, y, game.board.freeCard);
+    game.userInterface.showBoard(game.boardSize, game.board.cards);
+    this.accessibleCards = [];
+    var playerCard = this.board.findPlayer(this.currentPlayer);
+    this.accessibleCards = this.board.getAccessibleCards(playerCard.x, playerCard.y);
+    console.log(this.accessibleCards);
+    console.log(this.userInterface);
+    this.userInterface.HighlightCards(this.accessibleCards, true);
+    this.gameState++;
+  }
 }
 
 Game.prototype.addPlayer = function(player){
