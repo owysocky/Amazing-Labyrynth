@@ -28,13 +28,17 @@ Game.prototype.initialize = function(){
 
 Game.prototype.initializeTreasures = function(){
   console.log(this);
-  var count = 1;
-  while (count <= numTreasures){
+  var count = 0;
+  var treasureIDs = [];
+  for(var i = 1; i <= numTreasures; i++){
+    treasureIDs.push(i);
+  }
+  shuffle(treasureIDs);
+  while (count < numTreasures){
     var x = Math.floor(Math.random() * boardSize);
     var y = Math.floor(Math.random() * boardSize);
-
     if (!(this.board.checkTreasure(x, y))){
-      var treasure = new Treasure("treasure" + count);
+      var treasure = new Treasure("treasure" + treasureIDs[count]);
       treasure.id = this.treasureId;
       this.treasureId += 1;
       this.treasures.push(treasure);
@@ -131,14 +135,14 @@ Game.prototype.clickCard = function(x, y){
 Game.prototype.clickArrow = function(x, y){
   if((!this.gameOver) && (this.gameState % 2 === 0)){
     game.board.pushingCard(x, y, game.board.freeCard);
-    game.userInterface.showBoard(game.boardSize, game.board.cards);
     this.accessibleCards = [];
     var playerCard = this.board.findPlayer(this.currentPlayer);
     this.accessibleCards = this.board.getAccessibleCards(playerCard.x, playerCard.y);
     console.log(this.accessibleCards);
     console.log(this.userInterface);
-    this.userInterface.HighlightCards(this.accessibleCards, true);
     this.gameState++;
+    game.userInterface.showBoard(game.boardSize, game.board.cards);
+    this.userInterface.HighlightCards(this.accessibleCards, true);
   }
 }
 
@@ -432,7 +436,12 @@ UserInterface.prototype.HighlightCards = function(accessibleCards, highlight){
 }
 
 UserInterface.prototype.gameOver = function(){
-  alert("Game over");
+  var countTreasures = [];
+  game.players.forEach(function(person){
+    countTreasures.push(person.treasures.length);
+  });
+  var index = indexofMax(countTreasures);
+  alert("Game over. " + game.players[index].name + " has won!");
 }
 
 UserInterface.prototype.showBoard = function(size, cards){
@@ -510,6 +519,12 @@ UserInterface.prototype.showBoard = function(size, cards){
     $("#cardToUse").append("<img src='img/" + game.board.freeCard.treasure.name + ".png' id='freeCardTreasure'>");
   }
   $("#currentTreasure").html("<img src='img/" + game.currentTreasure.name + ".png'>")
+  if(game.gameState % 2 === 0 && game.currentPlayer){
+    $("#currentAction").text("It is " + game.currentPlayer.name + "'s turn to shift in a maze piece.");
+  }
+  else if (game.currentPlayer){
+    $("#currentAction").text("It is " + game.currentPlayer.name + "'s turn to move their piece.");
+  }
 }
 
 Board.prototype.initializeCards = function(){
@@ -563,8 +578,33 @@ Card.prototype.setInitialParameters = function(){
   this.setWalls();
 }
 
+var shuffle = function(arr){
+  var j, x, i;
+  for (i = arr.length - 1; i > 0; i--) {
+      j = Math.floor(Math.random() * (i + 1));
+      x = arr[i];
+      arr[i] = arr[j];
+      arr[j] = x;
+  };
+}
+
+var indexofMax = function(arr) {
+    if (arr.length === 0) {
+        return -1;
+    }
+    var max = arr[0];
+    var maxIndex = 0;
+    for (var i = 1; i < arr.length; i++) {
+        if (arr[i] > max) {
+            maxIndex = i;
+            max = arr[i];
+        }
+    };
+    return maxIndex;
+}
+
 var boardSize = 5;
-var numTreasures = 2;
+var numTreasures = 8;
 
 var game = new Game(boardSize);
 

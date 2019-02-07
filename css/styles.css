@@ -109,6 +109,12 @@ th{
   margin-left: 290px;
 }
 
+#currentAction{
+  font-weight: bold;
+  font-size: 30px;
+  margin-left: 75px;
+  color: red;
+}
 
 
 /*
