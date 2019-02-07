@@ -507,7 +507,29 @@ Board.prototype.initializeCards = function(){
       cardId += 1;
 // need to REPLACE:
 // should be specific number of each cards!
-      this.cards[i][j].setInitialParameters();
+      if(i === 0 && j === 0){
+        this.cards[i][j].type = 1;
+        this.cards[i][j].rotationAngle = 270;
+        this.cards[i][j].setWalls();
+      }
+      else if(i === 0 && j === 4){
+        this.cards[i][j].type = 1;
+        this.cards[i][j].rotationAngle = 0;
+        this.cards[i][j].setWalls();
+      }
+      else if(i === 4 && j === 0){
+        this.cards[i][j].type = 1;
+        this.cards[i][j].rotationAngle = 180;
+        this.cards[i][j].setWalls();
+      }
+      else if(i === 4 && j === 4){
+        this.cards[i][j].type = 1;
+        this.cards[i][j].rotationAngle = 90;
+        this.cards[i][j].setWalls();
+      }
+      else{
+        this.cards[i][j].setInitialParameters();
+      }
     }
   }
   this.freeCard = new Card(cardId, -1, -1);
