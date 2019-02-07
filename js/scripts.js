@@ -55,9 +55,6 @@ Game.prototype.initializeTreasures = function(){
 
 Game.prototype.switchPlayer = function(){
   this.currentPlayer = this.players[(this.currentPlayer.id + 1) % this.players.length];
-  if (this.gameOver){
-    this.currentPlayer = null;
-  }
 }
 
 function Player(name){
@@ -100,8 +97,11 @@ Game.prototype.setNewTreasure = function(){
   return false;
 }
 
-Game.prototype.gameOver = function(){
-  this.gameOver = true;
+Game.prototype.setGameOver = function(over){
+  if (over){
+    this.gameOver = true;
+    this.currentPlayer = null;
+  }
 }
 
 Game.prototype.clickCard = function(x, y){
@@ -114,7 +114,7 @@ Game.prototype.clickCard = function(x, y){
       if (this.checkTreasure(x, y) === true){
         this.addTreasureToPlayer();
         this.board.removeTreasure(x, y);
-        this.gameOver = !(this.setNewTreasure()); // couldn't set new treasure -> game over
+        this.setGameOver(!this.setNewTreasure()); // couldn't set new treasure -> game over
       }
 
       if (!(this.gameOver)) {
