@@ -55,6 +55,9 @@ Game.prototype.initializeTreasures = function(){
 
 Game.prototype.switchPlayer = function(){
   this.currentPlayer = this.players[(this.currentPlayer.id + 1) % this.players.length];
+  if (this.gameOver){
+    this.currentPlayer = null;
+  }
 }
 
 function Player(name){
@@ -476,13 +479,24 @@ UserInterface.prototype.showBoard = function(size, cards){
 
   };
   tag.html(htmlText);
+
+  var highlightTreasure = "";
+  var playerImage = "";
   for(var i = 0; i < size; i++){
     for(var j = 0; j < size; j++){
       if(cards[i][j].treasure){
-        $("th#card" + i + "_" + j).append("<img src='img/" +  cards[i][j].treasure.name + ".png' class='treasureImage'>");
+        if (cards[i][j].treasure === game.currentTreasure){
+          highlightTreasure = " highlightTreasure ";
+        } else {highlightTreasure = "";}
+        $("th#card" + i + "_" + j).append("<img src='img/" +  cards[i][j].treasure.name + ".png' class='treasureImage" + highlightTreasure + "'>");
       }
       if(cards[i][j].player){
-        $("th#card" + i + "_" + j).append("<img src='img/" +  cards[i][j].player.name + "_new_black.png' class='playerImage'>");
+        if (cards[i][j].player === game.currentPlayer){
+          playerImage = "_new_red.png";
+        } else {
+          playerImage = "_new_black.png";
+        }
+        $("th#card" + i + "_" + j).append("<img src='img/" +  cards[i][j].player.name + playerImage + "' class='playerImage'>");
       }
     };
   };
