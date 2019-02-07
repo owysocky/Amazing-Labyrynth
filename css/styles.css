@@ -2,6 +2,13 @@ img.highlight{
   border: 5px solid #ffa64d; //#E0624C;
 }
 
+img.highlightTreasure{
+  border: 3px solid red;//#fbf7f7; //#E0624C;
+  top: 12%;
+  left: 12%;
+  width: 75%;
+}
+
 img{
   width: 120px;
   border: 2px solid #A45F24; //#664B2F; //#513324; //#D57719;//#E0624C;

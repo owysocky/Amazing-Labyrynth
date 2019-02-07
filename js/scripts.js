@@ -101,21 +101,24 @@ Game.prototype.setNewTreasure = function(){
   return false;
 }
 
-Game.prototype.gameOver = function(){
-  this.gameOver = true;
+Game.prototype.setGameOver = function(over){
+  if (over){
+    this.gameOver = true;
+    this.currentPlayer = null;
+  }
 }
 
 Game.prototype.clickCard = function(x, y){
-  if((this.gameState % 2 === 1) && (this.accessibleCards.indexOf(this.board.cards[x][y]) >= 0)){
+  if((!this.gameOver) && (this.gameState % 2 === 1) && (this.accessibleCards.indexOf(this.board.cards[x][y]) >= 0)){
     var playerCard = this.board.findPlayer(this.currentPlayer);
-    if (this.board.cards[x][y].player === null || this.board.cards[x][y].player.name === this.currentPlayer.name) {
+    if ((this.board.cards[x][y].player === null) || (this.board.cards[x][y].player === this.currentPlayer)) {
       this.board.removePlayer(playerCard.x, playerCard.y);
       this.board.placePlayer(this.currentPlayer, x, y);
 
       if (this.checkTreasure(x, y) === true){
         this.addTreasureToPlayer();
         this.board.removeTreasure(x, y);
-        this.gameOver = !(this.setNewTreasure()); // couldn't set new treasure -> game over
+        this.setGameOver(!this.setNewTreasure()); // couldn't set new treasure -> game over
       }
 
       if (!(this.gameOver)) {
@@ -130,7 +133,7 @@ Game.prototype.clickCard = function(x, y){
 }
 
 Game.prototype.clickArrow = function(x, y){
-  if(this.gameState % 2 === 0){
+  if((!this.gameOver) && (this.gameState % 2 === 0)){
     game.board.pushingCard(x, y, game.board.freeCard);
     this.accessibleCards = [];
     var playerCard = this.board.findPlayer(this.currentPlayer);
@@ -315,9 +318,13 @@ Board.prototype.getAccessibleCards = function(x, y){
   traverceGraphInDeep(this.cards[x][y].node);
 
   var accessibleCards = [];
+  var card;
   for (var i = 0; i < this.nodes.length; i++) {
     if (this.nodes[i].visited === true) {
-      accessibleCards.push(this.findCard(this.nodes[i].id));
+      card = this.findCard(this.nodes[i].id);
+      if ((card.player === null) || (card.x === x && card.y === y)){
+        accessibleCards.push(this.findCard(this.nodes[i].id));
+      }
     }
   };
   return accessibleCards;
@@ -485,13 +492,24 @@ UserInterface.prototype.showBoard = function(size, cards){
 
   };
   tag.html(htmlText);
+
+  var highlightTreasure = "";
+  var playerImage = "";
   for(var i = 0; i < size; i++){
     for(var j = 0; j < size; j++){
       if(cards[i][j].treasure){
-        $("th#card" + i + "_" + j).append("<img src='img/" +  cards[i][j].treasure.name + ".png' class='treasureImage'>");
+        if (cards[i][j].treasure === game.currentTreasure){
+          highlightTreasure = " highlightTreasure ";
+        } else {highlightTreasure = "";}
+        $("th#card" + i + "_" + j).append("<img src='img/" +  cards[i][j].treasure.name + ".png' class='treasureImage" + highlightTreasure + "'>");
       }
       if(cards[i][j].player){
-        $("th#card" + i + "_" + j).append("<img src='img/" +  cards[i][j].player.name + ".png' class='playerImage'>");
+        if (cards[i][j].player === game.currentPlayer){
+          playerImage = "_new_red.png";
+        } else {
+          playerImage = "_new_black.png";
+        }
+        $("th#card" + i + "_" + j).append("<img src='img/" +  cards[i][j].player.name + playerImage + "' class='playerImage'>");
       }
     };
   };
