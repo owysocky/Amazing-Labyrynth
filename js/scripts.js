@@ -314,9 +314,13 @@ Board.prototype.getAccessibleCards = function(x, y){
   traverceGraphInDeep(this.cards[x][y].node);
 
   var accessibleCards = [];
+  var card;
   for (var i = 0; i < this.nodes.length; i++) {
     if (this.nodes[i].visited === true) {
-      accessibleCards.push(this.findCard(this.nodes[i].id));
+      card = this.findCard(this.nodes[i].id);
+      if ((card.player === null) || (card.x === x && card.y === y)){
+        accessibleCards.push(this.findCard(this.nodes[i].id));
+      }
     }
   };
   return accessibleCards;
