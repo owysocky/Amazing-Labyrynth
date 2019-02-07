@@ -657,6 +657,10 @@ UserInterface.prototype.attachListeners = function(){
     game.board.freeCard.rotate();
     game.userInterface.showBoard(game.boardSize, game.board.cards);
   });
+  $("#cardToUse").on("click", ".freeCardTreasureCurrent", function(){
+    game.board.freeCard.rotate();
+    game.userInterface.showBoard(game.boardSize, game.board.cards);
+  });
 }
 
 $(document).ready(function(){
