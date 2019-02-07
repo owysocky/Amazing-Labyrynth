@@ -128,14 +128,14 @@ Game.prototype.clickCard = function(x, y){
 Game.prototype.clickArrow = function(x, y){
   if(this.gameState % 2 === 0){
     game.board.pushingCard(x, y, game.board.freeCard);
-    game.userInterface.showBoard(game.boardSize, game.board.cards);
     this.accessibleCards = [];
     var playerCard = this.board.findPlayer(this.currentPlayer);
     this.accessibleCards = this.board.getAccessibleCards(playerCard.x, playerCard.y);
     console.log(this.accessibleCards);
     console.log(this.userInterface);
-    this.userInterface.HighlightCards(this.accessibleCards, true);
     this.gameState++;
+    game.userInterface.showBoard(game.boardSize, game.board.cards);
+    this.userInterface.HighlightCards(this.accessibleCards, true);
   }
 }
 
@@ -492,6 +492,12 @@ UserInterface.prototype.showBoard = function(size, cards){
     $("#cardToUse").append("<img src='img/" + game.board.freeCard.treasure.name + ".png' id='freeCardTreasure'>");
   }
   $("#currentTreasure").html("<img src='img/" + game.currentTreasure.name + ".png'>")
+  if(game.gameState % 2 === 0 && game.currentPlayer){
+    $("#currentAction").text("It is " + game.currentPlayer.name + "'s turn to shift in a maze piece.");
+  }
+  else if (game.currentPlayer){
+    $("#currentAction").text("It is " + game.currentPlayer.name + "'s turn to move their piece.");
+  }
 }
 
 Board.prototype.initializeCards = function(){
