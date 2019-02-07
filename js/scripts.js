@@ -120,6 +120,7 @@ Game.prototype.clickCard = function(x, y){
         this.userInterface.gameOver();
       }
       this.gameState++;
+      game.userInterface.showBoard(game.boardSize, game.board.cards);
     }
   }
 }
@@ -490,6 +491,7 @@ UserInterface.prototype.showBoard = function(size, cards){
   if(game.board.freeCard.treasure){
     $("#cardToUse").append("<img src='img/" + game.board.freeCard.treasure.name + ".png' id='freeCardTreasure'>");
   }
+  $("#currentTreasure").html("<img src='img/" + game.currentTreasure.name + ".png'>")
 }
 
 Board.prototype.initializeCards = function(){

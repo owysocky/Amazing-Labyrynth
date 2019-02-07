@@ -92,6 +92,18 @@ th{
   border: none;
 }
 
+#currentTreasureText{
+  font-weight: bold;
+  font-size: 30px;
+  margin-left: 200px;
+}
+
+#currentTreasure{
+  margin-left: 290px;
+}
+
+
+
 /*
 .over {
     width: 30px;
