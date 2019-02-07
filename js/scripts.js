@@ -429,7 +429,12 @@ UserInterface.prototype.HighlightCards = function(accessibleCards, highlight){
 }
 
 UserInterface.prototype.gameOver = function(){
-  alert("Game over");
+  var countTreasures = [];
+  game.players.forEach(function(person){
+    countTreasures.push(person.treasures.length);
+  });
+  var index = indexofMax(countTreasures);
+  alert("Game over. " + game.players[index].name + " has won!");
 }
 
 UserInterface.prototype.showBoard = function(size, cards){
@@ -565,8 +570,23 @@ var shuffle = function(arr){
   };
 }
 
+var indexofMax = function(arr) {
+    if (arr.length === 0) {
+        return -1;
+    }
+    var max = arr[0];
+    var maxIndex = 0;
+    for (var i = 1; i < arr.length; i++) {
+        if (arr[i] > max) {
+            maxIndex = i;
+            max = arr[i];
+        }
+    };
+    return maxIndex;
+}
+
 var boardSize = 5;
-var numTreasures = 8;
+var numTreasures = 2;
 
 var game = new Game(boardSize);
 
