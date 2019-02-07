@@ -102,7 +102,7 @@ Game.prototype.gameOver = function(){
 }
 
 Game.prototype.clickCard = function(x, y){
-  if(this.gameState % 2 === 1){
+  if((this.gameState % 2 === 1) && (this.accessibleCards.indexOf(this.board.cards[x][y]) >= 0)){
     var playerCard = this.board.findPlayer(this.currentPlayer);
     if (this.board.cards[x][y].player === null) {
       this.board.removePlayer(playerCard.x, playerCard.y);
