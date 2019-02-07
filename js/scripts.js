@@ -28,13 +28,17 @@ Game.prototype.initialize = function(){
 
 Game.prototype.initializeTreasures = function(){
   console.log(this);
-  var count = 1;
-  while (count <= numTreasures){
+  var count = 0;
+  var treasureIDs = [];
+  for(var i = 1; i <= numTreasures; i++){
+    treasureIDs.push(i);
+  }
+  shuffle(treasureIDs);
+  while (count < numTreasures){
     var x = Math.floor(Math.random() * boardSize);
     var y = Math.floor(Math.random() * boardSize);
-
     if (!(this.board.checkTreasure(x, y))){
-      var treasure = new Treasure("treasure" + count);
+      var treasure = new Treasure("treasure" + treasureIDs[count]);
       treasure.id = this.treasureId;
       this.treasureId += 1;
       this.treasures.push(treasure);
@@ -551,8 +555,18 @@ Card.prototype.setInitialParameters = function(){
   this.setWalls();
 }
 
+var shuffle = function(arr){
+  var j, x, i;
+  for (i = arr.length - 1; i > 0; i--) {
+      j = Math.floor(Math.random() * (i + 1));
+      x = arr[i];
+      arr[i] = arr[j];
+      arr[j] = x;
+  };
+}
+
 var boardSize = 5;
-var numTreasures = 2;
+var numTreasures = 8;
 
 var game = new Game(boardSize);
 
