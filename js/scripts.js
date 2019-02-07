@@ -102,9 +102,9 @@ Game.prototype.gameOver = function(){
 }
 
 Game.prototype.clickCard = function(x, y){
-  if((this.gameState % 2 === 1) && (this.accessibleCards.indexOf(this.board.cards[x][y]) >= 0)){
+  if((!this.gameOver) && (this.gameState % 2 === 1) && (this.accessibleCards.indexOf(this.board.cards[x][y]) >= 0)){
     var playerCard = this.board.findPlayer(this.currentPlayer);
-    if (this.board.cards[x][y].player === null) {
+    if ((this.board.cards[x][y].player === null) || (this.board.cards[x][y].player === this.currentPlayer)) {
       this.board.removePlayer(playerCard.x, playerCard.y);
       this.board.placePlayer(this.currentPlayer, x, y);
 
@@ -126,7 +126,7 @@ Game.prototype.clickCard = function(x, y){
 }
 
 Game.prototype.clickArrow = function(x, y){
-  if(this.gameState % 2 === 0){
+  if((!this.gameOver) && (this.gameState % 2 === 0)){
     game.board.pushingCard(x, y, game.board.freeCard);
     game.userInterface.showBoard(game.boardSize, game.board.cards);
     this.accessibleCards = [];
@@ -482,7 +482,7 @@ UserInterface.prototype.showBoard = function(size, cards){
         $("th#card" + i + "_" + j).append("<img src='img/" +  cards[i][j].treasure.name + ".png' class='treasureImage'>");
       }
       if(cards[i][j].player){
-        $("th#card" + i + "_" + j).append("<img src='img/" +  cards[i][j].player.name + ".png' class='playerImage'>");
+        $("th#card" + i + "_" + j).append("<img src='img/" +  cards[i][j].player.name + "_new_black.png' class='playerImage'>");
       }
     };
   };
