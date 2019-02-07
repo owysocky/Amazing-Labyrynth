@@ -610,6 +610,16 @@ var indexofMax = function(arr) {
     return maxIndex;
 }
 
+
+function resetGame() {
+  var oldPlayers = [];
+  oldPlayers = game.players;
+  game = new Game(boardSize);
+  game.initialize();
+  game.players = oldPlayers;
+  game.userInterface.showBoard(game.boardSize, game.board.cards);
+}
+
 var boardSize = 5;
 var numTreasures = 8;
 
@@ -685,5 +695,8 @@ console.log(game);
 console.log(cards);
 
 
+  });
+  $("#reset").click(function(){
+    resetGame();
   });
 });
