@@ -516,7 +516,11 @@ UserInterface.prototype.showBoard = function(size, cards){
   var cardToUse = "<img class='rotate" + game.board.freeCard.rotationAngle + "' src='img/" + this.images[game.board.freeCard.type] + "' id='freeCard'>";
   $("#cardToUse").html(cardToUse);
   if(game.board.freeCard.treasure){
-    $("#cardToUse").append("<img src='img/" + game.board.freeCard.treasure.name + ".png' id='freeCardTreasure'>");
+    $("#cardToUse").append("<img src='img/" + game.board.freeCard.treasure.name + ".png' class='freeCardTreasure'>");
+    if(game.board.freeCard.treasure === game.currentTreasure){
+      $(".freeCardTreasure").addClass("freeCardTreasureCurrent");
+      $(".freeCardTreasure").removeClass("freeCardTreasure");
+    }
   }
   $("#currentTreasure").html("<img src='img/" + game.currentTreasure.name + ".png'>")
   if(game.gameState % 2 === 0 && game.currentPlayer){
@@ -636,7 +640,7 @@ UserInterface.prototype.attachListeners = function(){
     game.board.freeCard.rotate();
     game.userInterface.showBoard(game.boardSize, game.board.cards);
   });
-  $("#cardToUse").on("click", "#freeCardTreasure", function(){
+  $("#cardToUse").on("click", ".freeCardTreasure", function(){
     game.board.freeCard.rotate();
     game.userInterface.showBoard(game.boardSize, game.board.cards);
   });

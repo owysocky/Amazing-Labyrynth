@@ -91,12 +91,20 @@ th{
   border: none;
 }
 
-#freeCardTreasure{
+.freeCardTreasure{
   position: absolute;
   top: 22%;
   left: 22%;
   width: 60%;
   border: none;
+}
+
+.freeCardTreasureCurrent{
+  position: absolute;
+  border: 3px solid red;
+  top: 12%;
+  left: 12%;
+  width: 75%;
 }
 
 #currentTreasureText{
