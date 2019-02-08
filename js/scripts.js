@@ -571,17 +571,17 @@ Board.prototype.initializeCards = function(){
         this.cards[i][j].rotationAngle = 270;
         this.cards[i][j].setWalls();
       }
-      else if(i === 0 && j === 4){
+      else if(i === 0 && j === this.size - 1){
         this.cards[i][j].type = 1;
         this.cards[i][j].rotationAngle = 0;
         this.cards[i][j].setWalls();
       }
-      else if(i === 4 && j === 0){
+      else if(i === this.size - 1 && j === 0){
         this.cards[i][j].type = 1;
         this.cards[i][j].rotationAngle = 180;
         this.cards[i][j].setWalls();
       }
-      else if(i === 4 && j === 4){
+      else if(i === this.size - 1 && j === this.size - 1){
         this.cards[i][j].type = 1;
         this.cards[i][j].rotationAngle = 90;
         this.cards[i][j].setWalls();
@@ -746,44 +746,3 @@ $(document).ready(function() {
   });
 
 });
-// $(document).ready(function(){
-//   //attachListeners();
-//   game.initialize();
-//   var player1 = new Player("player1");
-//   game.addPlayer(player1);
-//   var player2 = new Player("player2");
-//   game.addPlayer(player2);
-//   var player3 = new Player("player3");
-//   game.addPlayer(player3);
-//   var player4 = new Player("player4");
-//   game.addPlayer(player4);
-//   game.userInterface.showBoard(game.boardSize, game.board.cards);
-//
-//   console.log(game.board.cards);
-//   //game.board.removeItem(0, 0, 0);
-//   console.log(game.board.cards);
-//   // treasure = new Treasure("Treasure 1");
-//   // game.addTreasure(treasure);
-//   //
-//   // game.startGame();
-// console.log(game);
-//
-//   $("#main").click(function(){
-//
-//     // var id = 0;
-//     // for (var i = 0; i < cards.length; i++) {
-//     //   for (var j = 0; j < cards[i].length; j++) {
-//     //     var card = new Card(id, i, j);
-//     //     id += 1;
-//     //     cards[i][j] = card;
-//     //   };
-//     // };
-//
-// console.log(cards);
-//
-//
-//   });
-//   $("#reset").click(function(){
-//     resetGame();
-//   });
-// });
