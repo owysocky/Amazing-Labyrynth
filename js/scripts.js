@@ -22,8 +22,17 @@ Game.prototype.initialize = function(){
   //this.userInterface.onCardClick = this.clickCard;
   this.userInterface.onArrowClick = this.clickArrow;
   //this.userInterface.assignRandomImages(this.boardSize);
-//  this.userInterface.showBoard(this.boardSize, this.board.cards);
+  this.userInterface.showBoard(this.boardSize, this.board.cards);
+  game.userInterface.showPlayers();
   this.userInterface.attachListeners();
+}
+
+function resetGame() {
+  var oldPlayers = [];
+  oldPlayers = game.players;
+  game = new Game();
+  game.initialize()
+  game.players = oldPlayers;
 }
 
 Game.prototype.initializeTreasures = function(){
@@ -681,10 +690,12 @@ UserInterface.prototype.attachListeners = function(){
   $("#cardToUse").on("click", "#freeCard", function(){
     game.board.freeCard.rotate();
     game.userInterface.showBoard(game.boardSize, game.board.cards);
+    game.userInterface.showPlayers();
   });
-  $("#cardToUse").on("click", ".freeCardTreasure", function(){
+  $("#cardToUse").on("click", "#freeCardTreasure", function(){
     game.board.freeCard.rotate();
     game.userInterface.showBoard(game.boardSize, game.board.cards);
+    game.userInterface.showPlayers();
   });
   $("#cardToUse").on("click", ".freeCardTreasureCurrent", function(){
     game.board.freeCard.rotate();
@@ -692,6 +703,19 @@ UserInterface.prototype.attachListeners = function(){
   });
 }
 
+$(document).ready(function(){
+  //attachListeners();
+  game.initialize();
+  var player1 = new Player("player1");
+  game.addPlayer(player1);
+  var player2 = new Player("player2");
+  game.addPlayer(player2);
+  var player3 = new Player("player3");
+  game.addPlayer(player3);
+  var player4 = new Player("player4");
+  game.addPlayer(player4);
+  game.userInterface.showBoard(game.boardSize, game.board.cards);
+  game.userInterface.showPlayers();
 
 $(document).ready(function() {
   $("#form").submit(function(event){
@@ -746,6 +770,7 @@ $(document).ready(function() {
   });
 
   $("#reset").click(function(){
+    alert(0);
     resetGame();
   });
 
