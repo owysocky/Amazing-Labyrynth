@@ -69,6 +69,7 @@ body {
 
 #cardToUseText, #currentTreasureText, #currentAction{
   width: 120px;
+  color: black;
 }
 
 .treasureImage{
@@ -119,7 +120,7 @@ body {
   border: none;
 }
 
-#showListOfPlayers h3, .well .showScore h3 {
+#showListOfPlayers h3, .well {
   text-align: left;
   /* left: 40px; */
 }

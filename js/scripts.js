@@ -93,6 +93,10 @@ Game.prototype.addTreasureToPlayer = function(){
   this.currentPlayer.treasures.push(this.currentTreasure);
 }
 
+Player.prototype.removeAllTreasures = function(){
+  this.treasures = [];
+}
+
 Game.prototype.setNewTreasure = function(){
   if(this.currentTreasure.id < this.treasures.length-1){
     this.currentTreasure = this.treasures[this.currentTreasure.id + 1];
@@ -637,12 +641,16 @@ function resetGame() {
   game.initialize();
   game.players = oldPlayers;
   game.currentPlayer = game.players[0];
+  for (var i = 0; i < game.players.length; i++) {
+    game.players[i].removeAllTreasures();
+    game.board.placePlayer(game.players[i], game.defaulPlayerPosition[game.players[i].id][0], game.defaulPlayerPosition[game.players[i].id][1]);
+  }
   game.userInterface.showBoard(game.boardSize, game.board.cards);
   game.userInterface.showPlayersInfo();
 }
 
 var boardSize = 5;
-var numTreasures = 8;
+var numTreasures = 2;
 
 var game = null;// = new Game(boardSize);
 
