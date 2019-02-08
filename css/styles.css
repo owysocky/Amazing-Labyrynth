@@ -113,6 +113,12 @@ body {
   border-collapse: separate;
 }
 
+#playersInfo img{
+  width: 60px;
+  border: 2px solid #A45F24; //#664B2F; //#513324; //#D57719;//#E0624C;
+  border-radius: 35px;
+  position:relative;
+}
 /*#currentTreasureText{
   font-weight: bold;
   font-size: 30px;

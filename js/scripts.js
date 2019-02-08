@@ -23,7 +23,16 @@ Game.prototype.initialize = function(){
   this.userInterface.onArrowClick = this.clickArrow;
   //this.userInterface.assignRandomImages(this.boardSize);
   this.userInterface.showBoard(this.boardSize, this.board.cards);
+  game.userInterface.showPlayers();
   this.userInterface.attachListeners();
+}
+
+function resetGame() {
+  var oldPlayers = [];
+  oldPlayers = game.players;
+  game = new Game();
+  game.initialize()
+  game.players = oldPlayers;
 }
 
 Game.prototype.initializeTreasures = function(){
@@ -128,6 +137,7 @@ Game.prototype.clickCard = function(x, y){
       }
       this.gameState++;
       game.userInterface.showBoard(game.boardSize, game.board.cards);
+      game.userInterface.showPlayers();
     }
   }
 }
@@ -142,6 +152,7 @@ Game.prototype.clickArrow = function(x, y){
     console.log(this.userInterface);
     this.gameState++;
     game.userInterface.showBoard(game.boardSize, game.board.cards);
+    game.userInterface.showPlayers();
     this.userInterface.HighlightCards(this.accessibleCards, true);
   }
 }
@@ -444,6 +455,19 @@ UserInterface.prototype.gameOver = function(){
   alert("Game over. " + game.players[index].name + " has won!");
 }
 
+UserInterface.prototype.showPlayers = function(){
+  var tag = $("#playersInfo");
+  var htmlText = "";
+  for (var i = 0; i < game.players.length; i++) {
+    htmlText += "<br><img src='img/" +  game.players[i].name + "_new_black.png" + "' class='playerImage'>" + "<h3> " + game.players[i].name + " </h3>";
+
+    for (var j = 0; j < game.players[i].treasures.length; j++) {
+      htmlText += "<img src='img/" + game.players[i].treasures[j].name + ".png' class='freeCardTreasure'>"
+    };
+  };
+  tag.html(htmlText);
+}
+
 UserInterface.prototype.showBoard = function(size, cards){
   var tag = $("#board");
   var htmlText = "";
@@ -516,11 +540,7 @@ UserInterface.prototype.showBoard = function(size, cards){
   var cardToUse = "<img class='rotate" + game.board.freeCard.rotationAngle + "' src='img/" + this.images[game.board.freeCard.type] + "' id='freeCard'>";
   $("#cardToUse").html(cardToUse);
   if(game.board.freeCard.treasure){
-    $("#cardToUse").append("<img src='img/" + game.board.freeCard.treasure.name + ".png' class='freeCardTreasure'>");
-    if(game.board.freeCard.treasure === game.currentTreasure){
-      $(".freeCardTreasure").addClass("freeCardTreasureCurrent");
-      $(".freeCardTreasure").removeClass("freeCardTreasure");
-    }
+    $("#cardToUse").append("<img src='img/" + game.board.freeCard.treasure.name + ".png' id='freeCardTreasure'>");
   }
   $("#currentTreasure").html("<img src='img/" + game.currentTreasure.name + ".png'>")
   if(game.gameState % 2 === 0 && game.currentPlayer){
@@ -528,9 +548,6 @@ UserInterface.prototype.showBoard = function(size, cards){
   }
   else if (game.currentPlayer){
     $("#currentAction").text("It is " + game.currentPlayer.name + "'s turn to move their piece.");
-  }
-  if(game.currentPlayer){
-    $("#currentPlayer").html("<img src='img/" + game.currentPlayer.name + "_new_red.png'>");
   }
 }
 
@@ -610,16 +627,6 @@ var indexofMax = function(arr) {
     return maxIndex;
 }
 
-
-function resetGame() {
-  var oldPlayers = [];
-  oldPlayers = game.players;
-  game = new Game(boardSize);
-  game.initialize();
-  game.players = oldPlayers;
-  game.userInterface.showBoard(game.boardSize, game.board.cards);
-}
-
 var boardSize = 5;
 var numTreasures = 8;
 
@@ -652,10 +659,12 @@ UserInterface.prototype.attachListeners = function(){
   $("#cardToUse").on("click", "#freeCard", function(){
     game.board.freeCard.rotate();
     game.userInterface.showBoard(game.boardSize, game.board.cards);
+    game.userInterface.showPlayers();
   });
-  $("#cardToUse").on("click", ".freeCardTreasure", function(){
+  $("#cardToUse").on("click", "#freeCardTreasure", function(){
     game.board.freeCard.rotate();
     game.userInterface.showBoard(game.boardSize, game.board.cards);
+    game.userInterface.showPlayers();
   });
 }
 
@@ -671,6 +680,7 @@ $(document).ready(function(){
   var player4 = new Player("player4");
   game.addPlayer(player4);
   game.userInterface.showBoard(game.boardSize, game.board.cards);
+  game.userInterface.showPlayers();
 
   console.log(game.board.cards);
   //game.board.removeItem(0, 0, 0);
@@ -697,6 +707,7 @@ console.log(cards);
 
   });
   $("#reset").click(function(){
+    alert(0);
     resetGame();
   });
 });
