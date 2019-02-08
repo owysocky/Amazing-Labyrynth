@@ -715,7 +715,7 @@ $(document).ready(function() {
         $("input#name").focus();
         $("ul#showListOfPlayers").empty();
         game.players.forEach(function(player){
-          $("ul#showListOfPlayers").append("<li id=" + player.id + "><h3>" + player.name + "</h3></li>");
+          $("ul#showListOfPlayers").append("<li id=" + player.id + "><h3><img class='player' src='img/" + player.fileName + "_new_black.png' alt=''>" + player.name + "</h3></li>");
         });
         $(".letsPlay").show();
       }
@@ -727,10 +727,6 @@ $(document).ready(function() {
   });
 
   $("#letsPlay").click(function(){
-    game.players.forEach(function(player){
-      $(".showScore").append("<h3><span id=" + player.id + ">" + player.name + "</span>, here's your score:</h3>");
-      $(".showScore").append("<h3>" + player.treasures + "</h3>");
-    });
 
     game.userInterface.showBoard(game.boardSize, game.board.cards);
     game.userInterface.showPlayersInfo();

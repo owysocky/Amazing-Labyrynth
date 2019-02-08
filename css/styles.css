@@ -113,10 +113,15 @@ body {
   border-collapse: separate;
 }
 
-#playersInfo img.player, .showScore img.player{
-  width: 60px;
+#playersInfo img.player, .showScore img.player, #showListOfPlayers img.player{
+  width: 40px;
   opacity: .5;
   border: none;
+}
+
+#showListOfPlayers h3, .well .showScore h3 {
+  text-align: left;
+  /* left: 40px; */
 }
 
 #playersInfo img.treasure, .showScore img.treasure{
