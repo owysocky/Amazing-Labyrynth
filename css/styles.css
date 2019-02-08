@@ -113,13 +113,13 @@ body {
   border-collapse: separate;
 }
 
-#playersInfo   img.player{
+#playersInfo img.player, .showScore img.player{
   width: 60px;
   opacity: .5;
   border: none;
 }
 
-#playersInfo   img.treasure{
+#playersInfo img.treasure, .showScore img.treasure{
   width: 60px;
   border: none;
 }

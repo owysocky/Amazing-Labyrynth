@@ -77,7 +77,7 @@ Game.prototype.checkTreasure = function(x, y){
 }
 
 function Treasure(name){
-  this.name = name;
+  this.fileName = name;
 }
 
 UserInterface.prototype.onCardClick = function(callback){
@@ -128,6 +128,7 @@ Game.prototype.clickCard = function(x, y){
       }
       this.gameState++;
       game.userInterface.showBoard(game.boardSize, game.board.cards);
+      game.userInterface.showPlayersInfo();
     }
   }
 }
@@ -142,6 +143,7 @@ Game.prototype.clickArrow = function(x, y){
     console.log(this.userInterface);
     this.gameState++;
     game.userInterface.showBoard(game.boardSize, game.board.cards);
+    game.userInterface.showPlayersInfo();
     this.userInterface.HighlightCards(this.accessibleCards, true);
   }
 }
@@ -445,6 +447,22 @@ UserInterface.prototype.gameOver = function(){
   alert("Game over. " + game.players[index].name + " has won!");
 }
 
+UserInterface.prototype.showPlayersInfo = function(){
+  var tag = $(".showScore");// showScore
+  var htmlText = "";
+  for (var i = 0; i < game.players.length; i++) {
+
+    htmlText += "<h3><img class='player' src='img/" + game.players[i].fileName + "_new_black.png' alt=''>" + game.players[i].name + "</h3>"
+    if (game.players[i].treasures.length > 0){
+      for (var j = 0; j < game.players[i].treasures.length; j++) {
+        htmlText += "<img class='treasure' src='img/" + game.players[i].treasures[j].fileName + ".png' alt=''>";
+      };
+    }
+  };
+  console.log(htmlText);
+  tag.html(htmlText);
+
+}
 UserInterface.prototype.showBoard = function(size, cards){
   var tag = $("#board");
   var htmlText = "";
@@ -502,7 +520,7 @@ UserInterface.prototype.showBoard = function(size, cards){
         if (cards[i][j].treasure === game.currentTreasure){
           highlightTreasure = " highlightTreasure ";
         } else {highlightTreasure = "";}
-        $("th#card" + i + "_" + j).append("<img src='img/" +  cards[i][j].treasure.name + ".png' class='treasureImage" + highlightTreasure + "'>");
+        $("th#card" + i + "_" + j).append("<img src='img/" +  cards[i][j].treasure.fileName + ".png' class='treasureImage" + highlightTreasure + "'>");
       }
       if(cards[i][j].player){
         if (cards[i][j].player === game.currentPlayer){
@@ -517,13 +535,13 @@ UserInterface.prototype.showBoard = function(size, cards){
   var cardToUse = "<img class='rotate" + game.board.freeCard.rotationAngle + "' src='img/" + this.images[game.board.freeCard.type] + "' id='freeCard'>";
   $("#cardToUse").html(cardToUse);
   if(game.board.freeCard.treasure){
-    $("#cardToUse").append("<img src='img/" + game.board.freeCard.treasure.name + ".png' class='freeCardTreasure'>");
+    $("#cardToUse").append("<img src='img/" + game.board.freeCard.treasure.fileName + ".png' class='freeCardTreasure'>");
     if(game.board.freeCard.treasure === game.currentTreasure){
       $(".freeCardTreasure").addClass("freeCardTreasureCurrent");
       $(".freeCardTreasure").removeClass("freeCardTreasure");
     }
   }
-  $("#currentTreasure").html("<img src='img/" + game.currentTreasure.name + ".png'>")
+  $("#currentTreasure").html("<img src='img/" + game.currentTreasure.fileName + ".png'>")
   if(game.gameState % 2 === 0 && game.currentPlayer){
     $("#currentAction").text("It is " + game.currentPlayer.name + "'s turn to shift in a maze piece.");
   }
@@ -620,6 +638,7 @@ function resetGame() {
   game.players = oldPlayers;
   game.currentPlayer = game.players[0];
   game.userInterface.showBoard(game.boardSize, game.board.cards);
+  game.userInterface.showPlayersInfo();
 }
 
 var boardSize = 5;
@@ -714,6 +733,7 @@ $(document).ready(function() {
     });
 
     game.userInterface.showBoard(game.boardSize, game.board.cards);
+    game.userInterface.showPlayersInfo();
 
     $("#startScreen").hide();
     $(".showScore").show();
