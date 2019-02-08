@@ -22,7 +22,7 @@ Game.prototype.initialize = function(){
   //this.userInterface.onCardClick = this.clickCard;
   this.userInterface.onArrowClick = this.clickArrow;
   //this.userInterface.assignRandomImages(this.boardSize);
-  this.userInterface.showBoard(this.boardSize, this.board.cards);
+//  this.userInterface.showBoard(this.boardSize, this.board.cards);
   this.userInterface.attachListeners();
 }
 
@@ -157,6 +157,7 @@ Game.prototype.addPlayer = function(player){
   }
   this.players.push(player);
   player.id = this.playerId;
+  player.fileName = "player" + (player.id + 1).toString();
 
   this.board.placePlayer(player, this.defaulPlayerPosition[player.id][0], this.defaulPlayerPosition[player.id][1]);
   this.playerId += 1;
@@ -509,7 +510,7 @@ UserInterface.prototype.showBoard = function(size, cards){
         } else {
           playerImage = "_new_black.png";
         }
-        $("th#card" + i + "_" + j).append("<img src='img/" +  cards[i][j].player.name + playerImage + "' class='playerImage'>");
+        $("th#card" + i + "_" + j).append("<img src='img/" +  cards[i][j].player.fileName + playerImage + "' class='playerImage'>");
       }
     };
   };
@@ -530,7 +531,7 @@ UserInterface.prototype.showBoard = function(size, cards){
     $("#currentAction").text("It is " + game.currentPlayer.name + "'s turn to move their piece.");
   }
   if(game.currentPlayer){
-    $("#currentPlayer").html("<img src='img/" + game.currentPlayer.name + "_new_red.png'>");
+    $("#currentPlayer").html("<img src='img/" + game.currentPlayer.fileName + "_new_red.png'>");
   }
 }
 
@@ -617,13 +618,14 @@ function resetGame() {
   game = new Game(boardSize);
   game.initialize();
   game.players = oldPlayers;
+  game.currentPlayer = game.players[0];
   game.userInterface.showBoard(game.boardSize, game.board.cards);
 }
 
 var boardSize = 5;
 var numTreasures = 8;
 
-var game = new Game(boardSize);
+var game = null;// = new Game(boardSize);
 
 //function attachListeners(){
 UserInterface.prototype.attachListeners = function(){
@@ -663,44 +665,105 @@ UserInterface.prototype.attachListeners = function(){
   });
 }
 
-$(document).ready(function(){
-  //attachListeners();
-  game.initialize();
-  var player1 = new Player("player1");
-  game.addPlayer(player1);
-  var player2 = new Player("player2");
-  game.addPlayer(player2);
-  var player3 = new Player("player3");
-  game.addPlayer(player3);
-  var player4 = new Player("player4");
-  game.addPlayer(player4);
-  game.userInterface.showBoard(game.boardSize, game.board.cards);
 
-  console.log(game.board.cards);
-  //game.board.removeItem(0, 0, 0);
-  console.log(game.board.cards);
-  // treasure = new Treasure("Treasure 1");
-  // game.addTreasure(treasure);
-  //
-  // game.startGame();
-console.log(game);
+$(document).ready(function() {
+  $("#form").submit(function(event){
+    event.preventDefault();
+    var theName = $("input#name").val();
+    var theSize = parseInt($("input#size").val());
 
-  $("#main").click(function(){
+    if(game === null){
+       if(theSize%2!==0 && theSize >= 3){
+        boardSize = theSize;
+        game = new Game(boardSize);
+        game.initialize();
 
-    // var id = 0;
-    // for (var i = 0; i < cards.length; i++) {
-    //   for (var j = 0; j < cards[i].length; j++) {
-    //     var card = new Card(id, i, j);
-    //     id += 1;
-    //     cards[i][j] = card;
-    //   };
-    // };
+        $("input#size").val(theSize + "x" + theSize);
+        $("input#size").prop('disabled', true);
+      }else{
+        alert("Please enter an odd number.");
+        $("input#size").focus();
+      }
+    }
 
-console.log(cards);
+    if (theName){
+      if (game !== null) {
+        var nameCapitalized = theName.charAt(0).toUpperCase()+theName.slice(1);
+        var player = new Player(nameCapitalized);
 
+        game.addPlayer(player);
+        $("input#name").val("");
+        $("input#name").focus();
+        $("ul#showListOfPlayers").empty();
+        game.players.forEach(function(player){
+          $("ul#showListOfPlayers").append("<li id=" + player.id + "><h3>" + player.name + "</h3></li>");
+        });
+        $(".letsPlay").show();
+      }
+    }
+    else {
+      alert("Please enter a name.");
+      $("input#name").focus();
+    }
+  });
+
+  $("#letsPlay").click(function(){
+    game.players.forEach(function(player){
+      $(".showScore").append("<h3><span id=" + player.id + ">" + player.name + "</span>, here's your score:</h3>");
+      $(".showScore").append("<h3>" + player.treasures + "</h3>");
+    });
+
+    game.userInterface.showBoard(game.boardSize, game.board.cards);
+
+    $("#startScreen").hide();
+    $(".showScore").show();
+    $("#showGame").fadeToggle();
 
   });
+
   $("#reset").click(function(){
     resetGame();
   });
+
 });
+// $(document).ready(function(){
+//   //attachListeners();
+//   game.initialize();
+//   var player1 = new Player("player1");
+//   game.addPlayer(player1);
+//   var player2 = new Player("player2");
+//   game.addPlayer(player2);
+//   var player3 = new Player("player3");
+//   game.addPlayer(player3);
+//   var player4 = new Player("player4");
+//   game.addPlayer(player4);
+//   game.userInterface.showBoard(game.boardSize, game.board.cards);
+//
+//   console.log(game.board.cards);
+//   //game.board.removeItem(0, 0, 0);
+//   console.log(game.board.cards);
+//   // treasure = new Treasure("Treasure 1");
+//   // game.addTreasure(treasure);
+//   //
+//   // game.startGame();
+// console.log(game);
+//
+//   $("#main").click(function(){
+//
+//     // var id = 0;
+//     // for (var i = 0; i < cards.length; i++) {
+//     //   for (var j = 0; j < cards[i].length; j++) {
+//     //     var card = new Card(id, i, j);
+//     //     id += 1;
+//     //     cards[i][j] = card;
+//     //   };
+//     // };
+//
+// console.log(cards);
+//
+//
+//   });
+//   $("#reset").click(function(){
+//     resetGame();
+//   });
+// });

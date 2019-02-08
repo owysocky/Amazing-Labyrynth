@@ -113,39 +113,116 @@ body {
   border-collapse: separate;
 }
 
-/*#currentTreasureText{
-  font-weight: bold;
-  font-size: 30px;
-  margin-left: 200px;
+#playersInfo   img.player{
+  width: 60px;
+  opacity: .5;
+  border: none;
 }
 
-#currentTreasure{
-  margin-left: 290px;
-}*/
-
-/*#currentAction{
-  font-weight: bold;
-  font-size: 30px;
-  margin-left: 75px;
-  color: red;
-}*/
-
-
-/*
-.over {
-    width: 30px;
-    position:absolute;
-    top: 70px;
-    left: 70px;
-    z-index:100;
+#playersInfo   img.treasure{
+  width: 60px;
+  border: none;
 }
 
-.under {
-  width: 100px;
-  position:absolute;
-  z-index:99;
-} */
+h1, h3 {
+  text-align: center;
+}
 
-/* .box {
-    position:relative;
-} */
+#showRules{
+  display: none;
+}
+
+.btn{
+  margin:auto;
+  display:block;
+}
+
+#showScore{
+  display: none;
+}
+
+#cardToUseText{
+margin-left: 20%;
+margin-top: 3%;
+color: #5cb85c;
+}
+
+.treasureImage{
+  position: absolute;
+  top: 25%;
+  left: 25%;
+  width: 60%;
+  border: none;
+}
+
+#showGame {
+  display: none;
+}
+#startScreen{
+  margin-left: 30%;
+  margin-right: 30%;
+}
+.btn{
+  margin-top: 1%;
+  color: #fff;
+  background-color: #ffa64d;
+  border-color: #A45F24;
+
+}
+
+.container{
+  text-align: center;
+}
+
+#headerPic{
+  width: 100%
+}
+
+.well{
+    margin-top: 5%;
+    border-radius: 20px;
+}
+
+ul{
+  list-style-type: none;
+  padding-right: 10%;
+  text-align: center;
+  color: #A45F24;
+}
+
+.form-control, .help-block, .control-label{
+  color: #A45F24;
+  border-color: #A45F24;
+}
+
+.well{
+  border-color: #A45F24;
+}
+
+.letsPlay{
+  display: none;
+}
+
+.btn-brown:focus,
+.btn-brown.focus{
+  color: #fff;
+  background-color: #ffa64d;
+  border-color: #A45F24;
+}
+
+.btn-brown:hover{
+  color: #fff;
+}
+.btn-brown:active,
+.btn-brown.active,
+.open > .dropdown-toggle.btn-brown {
+  color: #fff;
+  background-color: #A45F24;
+  border-color: #A45F24;
+}
+
+.form-group input{
+  width: 40%;
+  margin-left: 30%;
+  text-align: center;
+}
