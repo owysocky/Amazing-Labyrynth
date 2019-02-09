@@ -658,7 +658,7 @@ function resetGame() {
 }
 
 var boardSize = 5;
-var numTreasures = 2;
+var numTreasures = 8;
 
 var game = null;// = new Game(boardSize);
 
