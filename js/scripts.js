@@ -23,16 +23,8 @@ Game.prototype.initialize = function(){
   this.userInterface.onArrowClick = this.clickArrow;
   //this.userInterface.assignRandomImages(this.boardSize);
   this.userInterface.showBoard(this.boardSize, this.board.cards);
-  game.userInterface.showPlayers();
+  game.userInterface.showPlayersInfo();
   this.userInterface.attachListeners();
-}
-
-function resetGame() {
-  var oldPlayers = [];
-  oldPlayers = game.players;
-  game = new Game();
-  game.initialize()
-  game.players = oldPlayers;
 }
 
 Game.prototype.initializeTreasures = function(){
@@ -453,11 +445,17 @@ UserInterface.prototype.HighlightCards = function(accessibleCards, highlight){
 
 UserInterface.prototype.gameOver = function(){
   var countTreasures = [];
+  var winner = "";
   game.players.forEach(function(person){
-    countTreasures.push(person.treasures.length);
+    countTreasures.push([person.treasures.length, person]);
   });
-  var index = indexofMax(countTreasures);
-  alert("Game over. " + game.players[index].name + " has won!");
+  countTreasures.sort();
+  var maxNumber = countTreasures[countTreasures.length - 1][0];
+  for (var i = countTreasures.length - 1; i>= 0; i--) {
+    winner += "\n " + (countTreasures.length - i).toString() + ". " + countTreasures[i][1].name;
+  };
+  //alert("Game over. " + game.players[index].name + " has won!");
+  alert("Game over. Here are the results: " + winner);
 }
 
 UserInterface.prototype.showPlayersInfo = function(){
@@ -690,12 +688,12 @@ UserInterface.prototype.attachListeners = function(){
   $("#cardToUse").on("click", "#freeCard", function(){
     game.board.freeCard.rotate();
     game.userInterface.showBoard(game.boardSize, game.board.cards);
-    game.userInterface.showPlayers();
+    game.userInterface.showPlayersInfo();
   });
   $("#cardToUse").on("click", "#freeCardTreasure", function(){
     game.board.freeCard.rotate();
     game.userInterface.showBoard(game.boardSize, game.board.cards);
-    game.userInterface.showPlayers();
+    game.userInterface.showPlayersInfo();
   });
   $("#cardToUse").on("click", ".freeCardTreasureCurrent", function(){
     game.board.freeCard.rotate();
@@ -703,19 +701,19 @@ UserInterface.prototype.attachListeners = function(){
   });
 }
 
-$(document).ready(function(){
-  //attachListeners();
-  game.initialize();
-  var player1 = new Player("player1");
-  game.addPlayer(player1);
-  var player2 = new Player("player2");
-  game.addPlayer(player2);
-  var player3 = new Player("player3");
-  game.addPlayer(player3);
-  var player4 = new Player("player4");
-  game.addPlayer(player4);
-  game.userInterface.showBoard(game.boardSize, game.board.cards);
-  game.userInterface.showPlayers();
+// $(document).ready(function(){
+//   //attachListeners();
+//   game.initialize();
+//   var player1 = new Player("player1");
+//   game.addPlayer(player1);
+//   var player2 = new Player("player2");
+//   game.addPlayer(player2);
+//   var player3 = new Player("player3");
+//   game.addPlayer(player3);
+//   var player4 = new Player("player4");
+//   game.addPlayer(player4);
+//   game.userInterface.showBoard(game.boardSize, game.board.cards);
+//   game.userInterface.showPlayers();
 
 $(document).ready(function() {
   $("#form").submit(function(event){
@@ -766,11 +764,11 @@ $(document).ready(function() {
     $("#startScreen").hide();
     $(".showScore").show();
     $("#showGame").fadeToggle();
+    $("#reset").show();
 
   });
 
   $("#reset").click(function(){
-    alert(0);
     resetGame();
   });
 

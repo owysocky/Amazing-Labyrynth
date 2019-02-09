@@ -133,8 +133,11 @@ body {
 h1, h3 {
   text-align: center;
 }
+.well{
+  background-color: #F0E5CF;
+}
 
-#showRules{
+#showRules, #reset{
   display: none;
 }
 
