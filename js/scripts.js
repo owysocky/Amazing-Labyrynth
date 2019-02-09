@@ -452,6 +452,7 @@ UserInterface.prototype.gameOver = function(){
   countTreasures.sort();
   var maxNumber = countTreasures[countTreasures.length - 1][0];
   for (var i = countTreasures.length - 1; i>= 0; i--) {
+
     winner += "\n " + (countTreasures.length - i).toString() + ". " + countTreasures[i][1].name;
   };
   //alert("Game over. " + game.players[index].name + " has won!");
