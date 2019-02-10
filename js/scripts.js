@@ -463,8 +463,12 @@ UserInterface.prototype.showPlayersInfo = function(){
   var tag = $(".showScore");// showScore
   var htmlText = "";
   for (var i = 0; i < game.players.length; i++) {
-
-    htmlText += "<h3><img class='player' src='img/" + game.players[i].fileName + "_new_black.png' alt=''>" + game.players[i].name + "</h3>"
+    if(game.players[i] === game.currentPlayer){
+      htmlText += "<h3><img class='player' src='img/" + game.players[i].fileName + "_new_red.png' alt=''>" + game.players[i].name + "</h3>"
+    }
+    else{
+      htmlText += "<h3><img class='player' src='img/" + game.players[i].fileName + "_new_black.png' alt=''>" + game.players[i].name + "</h3>"
+    }
     if (game.players[i].treasures.length > 0){
       for (var j = 0; j < game.players[i].treasures.length; j++) {
         htmlText += "<img class='treasure' src='img/" + game.players[i].treasures[j].fileName + ".png' alt=''>";
@@ -699,6 +703,7 @@ UserInterface.prototype.attachListeners = function(){
   $("#cardToUse").on("click", ".freeCardTreasureCurrent", function(){
     game.board.freeCard.rotate();
     game.userInterface.showBoard(game.boardSize, game.board.cards);
+    game.userInterface.showPlayersInfo();
   });
 }
 

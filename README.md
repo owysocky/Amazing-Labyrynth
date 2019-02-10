@@ -11,19 +11,25 @@ for the Intro Programming Course._
 
 ## Specifications
 
-* _Website will allow players to input their names and display them as the players_
-  * _Example input: All the players names._
-  * _Example output: Names will be displayed on the board._
+* _Website will allow players to input their names and display them as the players._
+  * _Example input: The player names are inputted in "Enter your name here:"._
+  * _Example output: Names will be displayed on the game board._
 * _Website will allow input for board size (must be an odd number), and adjust the board size accordingly._
   * _Example input: 7_
   * _Example output: A 7x7 size board is created._
+* _Website will allow a user to click a button to see the rules of the game._
+  * _Example input: Click the "Show Rules!" button._
+  * _Example output: A pop up is displayed with the rules of the game._
 * _Website will initialize random locations of the treasures, and a random order they are to be obtained in._
   * _Example input: When the board is created._
   * _Example output: Treasures will appear at random locations on the board, and the goal treasure is randomized._
-* _The goal treasure is highlighted with a red circle._
+* _The goal treasure is circled with a red border._
   * _Example input: The gold bars are the goal treasure._
   * _Example output: The gold bars are highlighted._
 * _A message is displayed indicating whose turn it is._
+  * _Example input: It is Bob's turn._
+  * _Example output: Website will display "It is Bob's turn to [insert action here]"_
+* _The current player whose turn it is will be highlighted _
   * _Example input: It is Bob's turn._
   * _Example output: Website will display "It is Bob's turn to [insert action here]"_
 * _Website will indicate what action the player should be doing on their turn._
